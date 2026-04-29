@@ -1,0 +1,22 @@
+{
+  "name": "mint-lab-school-platform",
+  "version": "1.0.0",
+  "description": "MINT Lab – Full-Stack Lernplattform mit KI-Chatbot",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "keywords": [
+    "mint",
+    "schule",
+    "nodejs",
+    "express",
+    "huggingface",
+    "chatbot"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

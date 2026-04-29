@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MINT Lab – Lernen mit Technik & KI</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>MINT Lab – Lernen mit Technik & KI</h1>
+      <p>Deine moderne Schulplattform für Informatik, Technik und Naturwissenschaften.</p>
+    </header>
+
+    <main class="layout">
+      <section class="card panel">
+        <h2>Kategorien</h2>
+        <div class="category-grid">
+          <article class="category-card">💻 <span>Programmieren (JavaScript, Python)</span></article>
+          <article class="category-card">🔌 <span>Arduino / ESP32</span></article>
+          <article class="category-card">🧩 <span>Micro:bit</span></article>
+          <article class="category-card">🤖 <span>Robotik</span></article>
+          <article class="category-card">🧪 <span>Naturwissenschaften</span></article>
+        </div>
+      </section>
+
+      <section class="card panel facts-widget">
+        <h2>MINT Facts</h2>
+        <p id="factText">Lade spannenden Fact …</p>
+      </section>
+
+      <section class="card panel">
+        <div class="section-head">
+          <h2>Projekt-System</h2>
+          <select id="filterCategory">
+            <option>Alle</option>
+            <option>Programmieren</option>
+            <option>Arduino / ESP32</option>
+            <option>Micro:bit</option>
+            <option>Robotik</option>
+            <option>Naturwissenschaften</option>
+          </select>
+        </div>
+
+        <form id="projectForm" class="project-form">
+          <input type="hidden" id="projectId" />
+          <input id="title" placeholder="Titel" required />
+          <select id="category" required>
+            <option value="">Kategorie wählen</option>
+            <option>Programmieren</option>
+            <option>Arduino / ESP32</option>
+            <option>Micro:bit</option>
+            <option>Robotik</option>
+            <option>Naturwissenschaften</option>
+          </select>
+          <textarea id="description" placeholder="Beschreibung" required></textarea>
+          <select id="difficulty" required>
+            <option value="">Schwierigkeitsgrad</option>
+            <option>Einsteiger</option>
+            <option>Mittel</option>
+            <option>Fortgeschritten</option>
+          </select>
+          <input type="date" id="date" required />
+          <button type="submit" id="submitBtn">Projekt speichern</button>
+          <button type="button" id="cancelEdit" class="hidden">Bearbeitung abbrechen</button>
+        </form>
+
+        <div id="projectList" class="project-list"></div>
+      </section>
+    </main>
+
+    <button id="chatToggle" class="chat-toggle" aria-label="KI-Chat öffnen">💬</button>
+    <section id="chatWindow" class="chat-window hidden">
+      <header>
+        <h3>MINT KI-Assistent</h3>
+        <button id="closeChat">✕</button>
+      </header>
+      <div id="chatMessages" class="chat-messages"></div>
+      <form id="chatForm" class="chat-input">
+        <input id="chatInput" placeholder="Frag z. B. 'Was ist ein ESP32?'" required />
+        <button>Senden</button>
+      </form>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>
