@@ -1,22 +1,22 @@
 {
-  "name": "mint-lab-school-platform",
+  "name": "roblox-account-linking",
   "version": "1.0.0",
-  "description": "MINT Lab – Full-Stack Lernplattform mit KI-Chatbot",
+  "description": "Roblox Account Linking System - Code Verification for Website + Roblox Game",
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
     "dev": "node server/index.js"
   },
   "keywords": [
-    "mint",
-    "schule",
+    "roblox",
+    "account-linking",
+    "verification",
     "nodejs",
-    "express",
-    "huggingface",
-    "chatbot"
+    "express"
   ],
   "license": "MIT",
   "dependencies": {
-    "express": "^4.19.2"
+    "cors": "^2.8.6",
+    "express": "^4.22.1"
   }
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "orderId": 1777491541792,
+    "userId": 1777491530311,
+    "productId": 1,
+    "itemName": "Neon Schwert",
+    "itemCode": "ITEM-JWP7HBMX",
+    "modelId": "SwordModel",
+    "redeemed": true,
+    "createdAt": 1777491541792,
+    "robloxUserId": 12345678
+  },
+  {
+    "orderId": 1777491543573,
+    "userId": 1777491530311,
+    "productId": 1,
+    "itemName": "Neon Schwert",
+    "itemCode": "ITEM-MFOSQEOS",
+    "modelId": "SwordModel",
+    "redeemed": false,
+    "createdAt": 1777491543573
+  }
+]

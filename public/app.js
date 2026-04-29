@@ -1,161 +1,318 @@
-const api = {
-  async getProjects(category = 'Alle') {
-    const query = category === 'Alle' ? '' : `?category=${encodeURIComponent(category)}`;
-    const response = await fetch(`/api/projects${query}`);
-    return response.json();
-  },
-  async createProject(payload) {
-    const response = await fetch('/api/projects', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    return response.json();
-  },
-  async updateProject(id, payload) {
-    const response = await fetch(`/api/projects/${id}`, {
-      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    return response.json();
-  },
-  async deleteProject(id) {
-    await fetch(`/api/projects/${id}`, { method: 'DELETE' });
-  },
-  async chat(message) {
-    const response = await fetch('/api/ai/chat', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message })
-    });
-    return response.json();
-  }
+// State
+let currentLang = 'de';
+let currentUser = null;
+let userId = null;
+let purchasedItems = [];
+
+// Translations
+const translations = {
+    de: {
+        loginTitle: "Anmelden / Registrieren",
+        continue: "Weiter",
+        otpTitle: "OTP Verifizierung",
+        otpDesc: "Code eingeben (siehe Server-Konsole)",
+        verify: "Verifizieren",
+        welcome: "Willkommen zum Roblox Shop",
+        welcomeDesc: "Verbinde deinen Account und kaufe exklusive Items!",
+        linkAccount: "Account verknüpfen",
+        shop: "Shop",
+        inventory: "Inventar",
+        generateCode: "Code generieren",
+        yourCode: "Dein Code:",
+        validFor: "Gültig für 5 Minuten",
+        instructions: "Anleitung:",
+        instruction1: "Öffne das Roblox Spiel",
+        instruction2: "Gib den Code in die TextBox ein",
+        instruction3: "Klicke auf Verify",
+        purchaseSuccess: "Kauf erfolgreich!",
+        product: "Produkt:",
+        itemCode: "Dein Item Code:",
+        enterInGame: "Diesen Code im Roblox Spiel eingeben!",
+        close: "Schließen",
+        goToRoblox: "Zum Roblox Spiel",
+        noItems: "Keine Items gekauft"
+    },
+    en: {
+        loginTitle: "Login / Register",
+        continue: "Continue",
+        otpTitle: "OTP Verification",
+        otpDesc: "Enter code (see server console)",
+        verify: "Verify",
+        welcome: "Welcome to Roblox Shop",
+        welcomeDesc: "Link your account and buy exclusive items!",
+        linkAccount: "Link Account",
+        shop: "Shop",
+        inventory: "Inventory",
+        generateCode: "Generate Code",
+        yourCode: "Your code:",
+        validFor: "Valid for 5 minutes",
+        instructions: "Instructions:",
+        instruction1: "Open the Roblox game",
+        instruction2: "Enter the code in the TextBox",
+        instruction3: "Click on Verify",
+        purchaseSuccess: "Purchase successful!",
+        product: "Product:",
+        itemCode: "Your Item Code:",
+        enterInGame: "Enter this code in Roblox game!",
+        close: "Close",
+        goToRoblox: "Go to Roblox Game",
+        noItems: "No items purchased"
+    }
 };
 
-const facts = [
-  'Der ESP32 hat integriertes WLAN und Bluetooth.',
-  'Python wurde 1991 veröffentlicht.',
-  'Ein Micro:bit hat Sensoren für Licht und Bewegung.',
-  'Robotik verbindet Mechanik, Elektronik und Software.',
-  'Naturwissenschaften nutzen Experimente zur Überprüfung von Hypothesen.'
-];
-
-const projectForm = document.getElementById('projectForm');
-const projectList = document.getElementById('projectList');
-const filterCategory = document.getElementById('filterCategory');
-const cancelEditBtn = document.getElementById('cancelEdit');
-const submitBtn = document.getElementById('submitBtn');
-
-function randomFact() {
-  document.getElementById('factText').textContent = facts[Math.floor(Math.random() * facts.length)];
-}
-
-function projectTemplate(project) {
-  return `
-    <article class="project-item">
-      <h3>${project.title}</h3>
-      <p>${project.description}</p>
-      <p class="project-meta">${project.category} · ${project.difficulty} · ${project.date}</p>
-      <div class="project-actions">
-        <button class="secondary" data-edit="${project.id}">Bearbeiten</button>
-        <button data-delete="${project.id}">Löschen</button>
-      </div>
-    </article>`;
-}
-
-async function renderProjects() {
-  const projects = await api.getProjects(filterCategory.value);
-  projectList.innerHTML = projects.length ? projects.map(projectTemplate).join('') : '<p>Keine Projekte gefunden.</p>';
-}
-
-function getFormData() {
-  return {
-    title: document.getElementById('title').value.trim(),
-    category: document.getElementById('category').value,
-    description: document.getElementById('description').value.trim(),
-    difficulty: document.getElementById('difficulty').value,
-    date: document.getElementById('date').value
-  };
-}
-
-function resetForm() {
-  projectForm.reset();
-  document.getElementById('projectId').value = '';
-  cancelEditBtn.classList.add('hidden');
-  submitBtn.textContent = 'Projekt speichern';
-}
-
-projectForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const id = document.getElementById('projectId').value;
-  const payload = getFormData();
-
-  if (id) {
-    await api.updateProject(id, payload);
-  } else {
-    await api.createProject(payload);
-  }
-
-  resetForm();
-  await renderProjects();
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    loadSavedUser();
+    updateLanguage();
 });
 
-projectList.addEventListener('click', async (event) => {
-  const editId = event.target.dataset.edit;
-  const deleteId = event.target.dataset.delete;
-
-  if (deleteId) {
-    await api.deleteProject(deleteId);
-    await renderProjects();
-  }
-
-  if (editId) {
-    const projects = await api.getProjects('Alle');
-    const project = projects.find((entry) => entry.id === editId);
-    if (!project) return;
-
-    document.getElementById('projectId').value = project.id;
-    document.getElementById('title').value = project.title;
-    document.getElementById('category').value = project.category;
-    document.getElementById('description').value = project.description;
-    document.getElementById('difficulty').value = project.difficulty;
-    document.getElementById('date').value = project.date;
-    cancelEditBtn.classList.remove('hidden');
-    submitBtn.textContent = 'Projekt aktualisieren';
-  }
+// Language Toggle
+document.getElementById('langToggle').addEventListener('click', () => {
+    currentLang = currentLang === 'de' ? 'en' : 'de';
+    document.getElementById('langToggle').textContent = currentLang === 'de' ? 'EN' : 'DE';
+    updateLanguage();
 });
 
-cancelEditBtn.addEventListener('click', resetForm);
-filterCategory.addEventListener('change', renderProjects);
-
-const chatToggle = document.getElementById('chatToggle');
-const chatWindow = document.getElementById('chatWindow');
-const closeChat = document.getElementById('closeChat');
-const chatMessages = document.getElementById('chatMessages');
-const chatForm = document.getElementById('chatForm');
-
-function addMessage(role, text) {
-  const message = document.createElement('div');
-  message.className = `msg ${role}`;
-  message.textContent = text;
-  chatMessages.appendChild(message);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+function updateLanguage() {
+    const t = translations[currentLang];
+    
+    // Update all elements with data-de/data-en attributes
+    document.querySelectorAll('[data-de]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${currentLang}`);
+    });
 }
 
-chatToggle.addEventListener('click', () => chatWindow.classList.toggle('hidden'));
-closeChat.addEventListener('click', () => chatWindow.classList.add('hidden'));
+// Auth Functions
+async function handleLogin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    
+    if (!username || !password) {
+        alert(currentLang === 'de' ? "Bitte Username und Passwort eingeben" : "Please enter username and password");
+        return;
+    }
+    
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            userId = data.userId;
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('otpForm').style.display = 'block';
+            alert(currentLang === 'de' 
+                ? `OTP gesendet! Check die Server-Konsole.\n(Code wird dort angezeigt)` 
+                : `OTP sent! Check the server console.\n(Code will be displayed there)`);
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error connecting to server');
+    }
+}
 
-chatForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
+async function handleVerifyOtp() {
+    const otp = document.getElementById('otpInput').value.trim();
+    
+    if (!otp) {
+        alert(currentLang === 'de' ? "Bitte OTP Code eingeben" : "Please enter OTP code");
+        return;
+    }
+    
+    try {
+        const res = await fetch('/api/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, otp })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            currentUser = data.username;
+            localStorage.setItem('robloxShopUser', JSON.stringify({ username: currentUser, userId }));
+            showDashboard();
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error verifying OTP');
+    }
+}
 
-  addMessage('user', text);
-  input.value = '';
-  addMessage('bot', 'Denke nach …');
+function loadSavedUser() {
+    const saved = localStorage.getItem('robloxShopUser');
+    if (saved) {
+        const user = JSON.parse(saved);
+        currentUser = user.username;
+        userId = user.userId;
+        showDashboard();
+    }
+}
 
-  const data = await api.chat(text);
-  chatMessages.lastChild.remove();
-  addMessage('bot', data.reply || 'Keine Antwort erhalten.');
-});
+function logout() {
+    localStorage.removeItem('robloxShopUser');
+    currentUser = null;
+    userId = null;
+    location.reload();
+}
 
-randomFact();
-setInterval(randomFact, 8000);
-renderProjects();
-addMessage('bot', 'Hi! Ich bin dein MINT-KI-Assistent. Frag mich alles zu Informatik, Robotik oder Naturwissenschaften.');
+function showDashboard() {
+    document.getElementById('homeSection').style.display = 'none';
+    document.getElementById('dashboardSection').style.display = 'block';
+    document.getElementById('userDisplay').textContent = `👤 ${currentUser}`;
+    document.getElementById('logoutBtn').style.display = 'block';
+    document.getElementById('logoutBtn').onclick = logout;
+    
+    loadProducts();
+    loadInventory();
+}
+
+// Navigation
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(pageId).style.display = 'block';
+    event.target.classList.add('active');
+}
+
+// Link Account
+async function generateLinkCode() {
+    try {
+        const res = await fetch('/api/generate-link-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            document.getElementById('linkCodeDisplay').style.display = 'block';
+            document.getElementById('linkCode').textContent = data.code;
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error generating code');
+    }
+}
+
+// Shop
+async function loadProducts() {
+    try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        
+        if (data.success) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            const icons = ['⚔️', '🎫', '⚡', '🛡️', '💎', '🔥'];
+            
+            data.products.forEach((product, index) => {
+                const name = currentLang === 'de' ? product.name_de : product.name_en;
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${icons[index % icons.length]}</div>
+                    <div class="product-info">
+                        <h3 class="product-name">${name}</h3>
+                        <p class="product-price">${product.price} Coins</p>
+                        <button onclick="buyProduct(${product.id})" class="btn-primary">
+                            ${currentLang === 'de' ? 'Kaufen' : 'Buy'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function buyProduct(productId) {
+    try {
+        const res = await fetch('/api/buy-product', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, productId })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            // Show modal with item code
+            document.getElementById('modalProductName').textContent = data.productName;
+            document.getElementById('itemCode').textContent = data.itemCode;
+            document.getElementById('itemModal').style.display = 'flex';
+            
+            // Save to inventory
+            purchasedItems.push({
+                itemCode: data.itemCode,
+                productName: data.productName,
+                redeemed: false
+            });
+            saveInventory();
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error purchasing product');
+    }
+}
+
+function closeModal() {
+    document.getElementById('itemModal').style.display = 'none';
+}
+
+// Inventory
+function saveInventory() {
+    localStorage.setItem('robloxShopInventory', JSON.stringify(purchasedItems));
+}
+
+function loadInventory() {
+    const saved = localStorage.getItem('robloxShopInventory');
+    if (saved) {
+        purchasedItems = JSON.parse(saved);
+    }
+    
+    renderInventory();
+}
+
+function renderInventory() {
+    const list = document.getElementById('inventoryList');
+    
+    if (purchasedItems.length === 0) {
+        list.innerHTML = `<p>${translations[currentLang].noItems}</p>`;
+        return;
+    }
+    
+    list.innerHTML = '';
+    purchasedItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `inventory-item ${item.redeemed ? 'redeemed' : ''}`;
+        div.innerHTML = `
+            <div>
+                <strong>${item.productName}</strong><br>
+                <small>Code: ${item.itemCode}</small>
+            </div>
+            <span style="color: ${item.redeemed ? 'var(--text-muted)' : 'var(--success)'}">
+                ${item.redeemed 
+                    ? (currentLang === 'de' ? 'Eingelöst' : 'Redeemed') 
+                    : (currentLang === 'de' ? 'Bereit' : 'Ready')}
+            </span>
+        `;
+        list.appendChild(div);
+    });
+}

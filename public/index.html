@@ -1,87 +1,114 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MINT Lab – Lernen mit Technik & KI</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="hero">
-      <h1>MINT Lab – Lernen mit Technik & KI</h1>
-      <p>Deine moderne Schulplattform für Informatik, Technik und Naturwissenschaften.</p>
-    </header>
-
-    <main class="layout">
-      <section class="card panel">
-        <h2>Kategorien</h2>
-        <div class="category-grid">
-          <article class="category-card">💻 <span>Programmieren (JavaScript, Python)</span></article>
-          <article class="category-card">🔌 <span>Arduino / ESP32</span></article>
-          <article class="category-card">🧩 <span>Micro:bit</span></article>
-          <article class="category-card">🤖 <span>Robotik</span></article>
-          <article class="category-card">🧪 <span>Naturwissenschaften</span></article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Shop - Account Linking</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">🎮 RobloxShop</div>
+        <div class="nav-right">
+            <button id="langToggle" class="btn-lang">EN</button>
+            <span id="userDisplay" class="user-display"></span>
+            <button id="logoutBtn" class="btn-logout" style="display:none;">Logout</button>
         </div>
-      </section>
+    </nav>
 
-      <section class="card panel facts-widget">
-        <h2>MINT Facts</h2>
-        <p id="factText">Lade spannenden Fact …</p>
-      </section>
-
-      <section class="card panel">
-        <div class="section-head">
-          <h2>Projekt-System</h2>
-          <select id="filterCategory">
-            <option>Alle</option>
-            <option>Programmieren</option>
-            <option>Arduino / ESP32</option>
-            <option>Micro:bit</option>
-            <option>Robotik</option>
-            <option>Naturwissenschaften</option>
-          </select>
+    <!-- Startseite / Login Section -->
+    <section id="homeSection" class="section active">
+        <div class="hero">
+            <h1 data-de="Willkommen zum Roblox Shop" data-en="Welcome to Roblox Shop">Willkommen zum Roblox Shop</h1>
+            <p data-de="Verbinde deinen Account und kaufe exklusive Items!" data-en="Link your account and buy exclusive items!">Verbinde deinen Account und kaufe exklusive Items!</p>
         </div>
 
-        <form id="projectForm" class="project-form">
-          <input type="hidden" id="projectId" />
-          <input id="title" placeholder="Titel" required />
-          <select id="category" required>
-            <option value="">Kategorie wählen</option>
-            <option>Programmieren</option>
-            <option>Arduino / ESP32</option>
-            <option>Micro:bit</option>
-            <option>Robotik</option>
-            <option>Naturwissenschaften</option>
-          </select>
-          <textarea id="description" placeholder="Beschreibung" required></textarea>
-          <select id="difficulty" required>
-            <option value="">Schwierigkeitsgrad</option>
-            <option>Einsteiger</option>
-            <option>Mittel</option>
-            <option>Fortgeschritten</option>
-          </select>
-          <input type="date" id="date" required />
-          <button type="submit" id="submitBtn">Projekt speichern</button>
-          <button type="button" id="cancelEdit" class="hidden">Bearbeitung abbrechen</button>
-        </form>
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-box">
+            <h2 data-de="Anmelden / Registrieren" data-en="Login / Register">Anmelden / Registrieren</h2>
+            <input type="text" id="username" placeholder="Username" />
+            <input type="password" id="password" placeholder="Passwort" />
+            <button onclick="handleLogin()" class="btn-primary" data-de="Weiter" data-en="Continue">Weiter</button>
+        </div>
 
-        <div id="projectList" class="project-list"></div>
-      </section>
-    </main>
-
-    <button id="chatToggle" class="chat-toggle" aria-label="KI-Chat öffnen">💬</button>
-    <section id="chatWindow" class="chat-window hidden">
-      <header>
-        <h3>MINT KI-Assistent</h3>
-        <button id="closeChat">✕</button>
-      </header>
-      <div id="chatMessages" class="chat-messages"></div>
-      <form id="chatForm" class="chat-input">
-        <input id="chatInput" placeholder="Frag z. B. 'Was ist ein ESP32?'" required />
-        <button>Senden</button>
-      </form>
+        <!-- OTP Form -->
+        <div id="otpForm" class="auth-box" style="display:none;">
+            <h2 data-de="OTP Verifizierung" data-en="OTP Verification">OTP Verifizierung</h2>
+            <p data-de="Code eingeben (siehe Server-Konsole)" data-en="Enter code (see server console)">Code eingeben (siehe Server-Konsole)</p>
+            <input type="text" id="otpInput" placeholder="123456" maxlength="6" />
+            <button onclick="handleVerifyOtp()" class="btn-primary" data-de="Verifizieren" data-en="Verify">Verifizieren</button>
+        </div>
     </section>
 
+    <!-- Dashboard Section -->
+    <section id="dashboardSection" class="section" style="display:none;">
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <button class="menu-btn active" onclick="showPage('linkPage')" data-de="Account verknüpfen" data-en="Link Account">Account verknüpfen</button>
+                <button class="menu-btn" onclick="showPage('shopPage')" data-de="Shop" data-en="Shop">Shop</button>
+                <button class="menu-btn" onclick="showPage('inventoryPage')" data-de="Inventar" data-en="Inventory">Inventar</button>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Link Account Page -->
+                <div id="linkPage" class="page active">
+                    <h2 data-de="Roblox Account verknüpfen" data-en="Link Roblox Account">Roblox Account verknüpfen</h2>
+                    <div class="link-card">
+                        <button onclick="generateLinkCode()" class="btn-primary btn-large" data-de="Code generieren" data-en="Generate Code">Code generieren</button>
+                        <div id="linkCodeDisplay" class="code-display" style="display:none;">
+                            <p data-de="Dein Code:" data-en="Your code:">Dein Code:</p>
+                            <span id="linkCode" class="code-text">------</span>
+                            <p class="timer" data-de="Gültig für 5 Minuten" data-en="Valid for 5 minutes">Gültig für 5 Minuten</p>
+                        </div>
+                        <div class="instructions">
+                            <h3 data-de="Anleitung:" data-en="Instructions:">Anleitung:</h3>
+                            <ol data-de="1. Öffne Roblox Spiel\n2. Gib den Code ein\n3. Account wird automatisch verknüpft" 
+                                data-en="1. Open Roblox game\n2. Enter the code\n3. Account will be linked automatically">
+                                <li data-de="Öffne das Roblox Spiel" data-en="Open the Roblox game">Öffne das Roblox Spiel</li>
+                                <li data-de="Gib den Code in die TextBox ein" data-en="Enter the code in the TextBox">Gib den Code in die TextBox ein</li>
+                                <li data-de="Klicke auf Verify" data-en="Click on Verify">Klicke auf Verify</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shop Page -->
+                <div id="shopPage" class="page" style="display:none;">
+                    <h2 data-de="Shop" data-en="Shop">Shop</h2>
+                    <div id="productsGrid" class="products-grid">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Inventory Page -->
+                <div id="inventoryPage" class="page" style="display:none;">
+                    <h2 data-de="Dein Inventar" data-en="Your Inventory">Dein Inventar</h2>
+                    <div id="inventoryList" class="inventory-list">
+                        <p data-de="Keine Items gekauft" data-en="No items purchased">Keine Items gekauft</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <!-- Item Code Modal -->
+    <div id="itemModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2 data-de="Kauf erfolgreich!" data-en="Purchase successful!">Kauf erfolgreich!</h2>
+            <p><span data-de="Produkt:" data-en="Product:">Produkt:</span> <span id="modalProductName"></span></p>
+            <div class="item-code-box">
+                <p data-de="Dein Item Code:" data-en="Your Item Code:">Dein Item Code:</p>
+                <span id="itemCode" class="code-text-large">ITEM-XXXXXX</span>
+            </div>
+            <p class="note" data-de="Diesen Code im Roblox Spiel eingeben!" data-en="Enter this code in Roblox game!">Diesen Code im Roblox Spiel eingeben!</p>
+            <button onclick="closeModal()" class="btn-primary" data-de="Schließen" data-en="Close">Schließen</button>
+            <a id="robloxGameLink" href="#" target="_blank" class="btn-secondary" data-de="Zum Roblox Spiel" data-en="Go to Roblox Game">Zum Roblox Spiel</a>
+        </div>
+    </div>
+
     <script src="app.js"></script>
-  </body>
+</body>
 </html>

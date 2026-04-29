@@ -1,0 +1,1 @@
+[{"id":1,"name_de":"Neon Schwert","name_en":"Neon Sword","price":100,"image":"sword.png","modelId":"SwordModel"},{"id":2,"name_de":"VIP Pass","name_en":"VIP Pass","price":500,"image":"vip.png","modelId":"VIPBadge"},{"id":3,"name_de":"Speed Boost","name_en":"Speed Boost","price":250,"image":"speed.png","modelId":"SpeedGear"}]
