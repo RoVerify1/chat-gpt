@@ -1,161 +1,297 @@
-const api = {
-  async getProjects(category = 'Alle') {
-    const query = category === 'Alle' ? '' : `?category=${encodeURIComponent(category)}`;
-    const response = await fetch(`/api/projects${query}`);
-    return response.json();
-  },
-  async createProject(payload) {
-    const response = await fetch('/api/projects', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    return response.json();
-  },
-  async updateProject(id, payload) {
-    const response = await fetch(`/api/projects/${id}`, {
-      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    return response.json();
-  },
-  async deleteProject(id) {
-    await fetch(`/api/projects/${id}`, { method: 'DELETE' });
-  },
-  async chat(message) {
-    const response = await fetch('/api/ai/chat', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message })
-    });
-    return response.json();
-  }
-};
+/* ZERIONX - Roblox Account Linking System */
 
-const facts = [
-  'Der ESP32 hat integriertes WLAN und Bluetooth.',
-  'Python wurde 1991 veröffentlicht.',
-  'Ein Micro:bit hat Sensoren für Licht und Bewegung.',
-  'Robotik verbindet Mechanik, Elektronik und Software.',
-  'Naturwissenschaften nutzen Experimente zur Überprüfung von Hypothesen.'
-];
+// DOM Elements
+const generateCodeBtn = document.getElementById('generateCodeBtn');
+const inputCard = document.getElementById('input-card');
+const codeDisplay = document.getElementById('code-display');
+const codeTextEl = document.getElementById('code-text');
+const timerText = document.getElementById('timerText');
+const statusMessage = document.getElementById('statusMessage');
+const linkStatus = document.getElementById('linkStatus');
+const checkCodeForm = document.getElementById('checkCodeForm');
+const checkCodeInput = document.getElementById('checkCodeInput');
+const codeStatusResult = document.getElementById('codeStatusResult');
+const checkAccountForm = document.getElementById('checkAccountForm');
+const robloxUserIdInput = document.getElementById('robloxUserIdInput');
+const accountStatusResult = document.getElementById('accountStatusResult');
+const tabBtns = document.querySelectorAll('.tab-btn');
+const codeStatusTab = document.getElementById('codeStatusTab');
+const accountStatusTab = document.getElementById('accountStatusTab');
 
-const projectForm = document.getElementById('projectForm');
-const projectList = document.getElementById('projectList');
-const filterCategory = document.getElementById('filterCategory');
-const cancelEditBtn = document.getElementById('cancelEdit');
-const submitBtn = document.getElementById('submitBtn');
+let currentCode = null;
+let countdownInterval = null;
+let pollingInterval = null;
 
-function randomFact() {
-  document.getElementById('factText').textContent = facts[Math.floor(Math.random() * facts.length)];
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  setupEventListeners();
+});
+
+function setupEventListeners() {
+  // Generate Code Button
+  generateCodeBtn.addEventListener('click', generateCode);
+
+  // Check Code Form
+  checkCodeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = checkCodeInput.value.trim().toUpperCase();
+    if (code) {
+      await checkCodeStatus(code);
+    }
+  });
+
+  // Check Account Form
+  checkAccountForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const userId = robloxUserIdInput.value.trim();
+    if (userId) {
+      await checkAccountStatus(userId);
+    }
+  });
+
+  // Tab Switching
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.dataset.tab;
+      
+      // Update active button
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Update active content
+      codeStatusTab.classList.remove('active');
+      accountStatusTab.classList.remove('active');
+      
+      if (tabName === 'code-status') {
+        codeStatusTab.classList.add('active');
+      } else {
+        accountStatusTab.classList.add('active');
+      }
+    });
+  });
 }
 
-function projectTemplate(project) {
-  return `
-    <article class="project-item">
-      <h3>${project.title}</h3>
-      <p>${project.description}</p>
-      <p class="project-meta">${project.category} · ${project.difficulty} · ${project.date}</p>
-      <div class="project-actions">
-        <button class="secondary" data-edit="${project.id}">Bearbeiten</button>
-        <button data-delete="${project.id}">Löschen</button>
+// Generate Verification Code
+async function generateCode() {
+  try {
+    showLoading(generateCodeBtn, true);
+    statusMessage.className = 'status-message hidden';
+    statusMessage.textContent = '';
+
+    const response = await fetch('/api/generate-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.code) {
+      currentCode = data.code;
+      codeTextEl.textContent = currentCode;
+      inputCard.classList.add('hidden');
+      codeDisplay.classList.remove('hidden');
+      linkStatus.className = 'status-message hidden';
+      
+      startCountdown(data.expiresIn || 300);
+      startPolling(currentCode);
+    } else {
+      statusMessage.className = 'status-message error';
+      statusMessage.textContent = data.message || 'Error generating code.';
+    }
+  } catch (error) {
+    console.error('Error generating code:', error);
+    statusMessage.className = 'status-message error';
+    statusMessage.textContent = 'Connection error. Please try again.';
+  } finally {
+    showLoading(generateCodeBtn, false);
+  }
+}
+
+// Start Countdown Timer
+function startCountdown(seconds) {
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+  }
+
+  let remaining = seconds;
+
+  countdownInterval = setInterval(() => {
+    remaining--;
+    
+    const minutes = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    const formatted = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    timerText.textContent = formatted;
+
+    if (remaining <= 0) {
+      clearInterval(countdownInterval);
+      stopPolling();
+      timerText.textContent = 'EXPIRED';
+      linkStatus.className = 'status-message error';
+      linkStatus.textContent = 'Code expired. Please generate a new one.';
+      linkStatus.classList.remove('hidden');
+    }
+  }, 1000);
+}
+
+// Poll for Code Status
+function startPolling(code) {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+  }
+
+  pollingInterval = setInterval(async () => {
+    try {
+      const response = await fetch(`/api/status/${encodeURIComponent(code)}`);
+      const data = await response.json();
+
+      if (data.linked) {
+        stopPolling();
+        clearInterval(countdownInterval);
+        
+        linkStatus.className = 'status-message success';
+        linkStatus.textContent = '✅ Account successfully linked!';
+        linkStatus.classList.remove('hidden');
+        timerText.textContent = 'LINKED';
+        
+        setTimeout(() => {
+          codeDisplay.classList.add('hidden');
+          inputCard.classList.remove('hidden');
+          statusMessage.className = 'status-message success';
+          statusMessage.textContent = 'Your account has been verified!';
+          statusMessage.classList.remove('hidden');
+        }, 3000);
+      } else if (data.expired) {
+        stopPolling();
+        linkStatus.className = 'status-message error';
+        linkStatus.textContent = 'Code expired.';
+        linkStatus.classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error('Polling error:', error);
+    }
+  }, 2000); // Check every 2 seconds
+}
+
+function stopPolling() {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+}
+
+// Check Code Status
+async function checkCodeStatus(code) {
+  try {
+    codeStatusResult.innerHTML = '<div class="loading"><span class="spinner"></span></div>';
+
+    const response = await fetch(`/api/status/${encodeURIComponent(code.toUpperCase())}`);
+    const data = await response.json();
+
+    if (!data.found) {
+      codeStatusResult.innerHTML = `
+        <div class="status-card">
+          <span class="status-icon">❌</span>
+          <p>${data.message || 'Code not found.'}</p>
+        </div>
+      `;
+      return;
+    }
+
+    let statusClass = 'pending';
+    let statusIcon = '⏳';
+    let statusText = 'Waiting for verification...';
+
+    if (data.linked) {
+      statusClass = 'linked';
+      statusIcon = '✅';
+      statusText = 'Code successfully used!';
+    } else if (data.expired) {
+      statusClass = 'expired';
+      statusIcon = '⏰';
+      statusText = 'Code has expired.';
+    }
+
+    const createdAt = new Date(data.createdAt);
+    const timeString = createdAt.toLocaleTimeString('en-US');
+
+    codeStatusResult.innerHTML = `
+      <div class="status-card ${statusClass}">
+        <span class="status-icon">${statusIcon}</span>
+        <p><strong>Code:</strong> ${code.toUpperCase()}</p>
+        <p><strong>Status:</strong> ${statusText}</p>
+        ${data.linked ? `<p><strong>Roblox ID:</strong> ${data.robloxUserId}</p>` : ''}
+        <p><strong>Created:</strong> ${timeString}</p>
       </div>
-    </article>`;
+    `;
+  } catch (error) {
+    console.error('Error checking code status:', error);
+    codeStatusResult.innerHTML = `
+      <div class="status-card">
+        <span class="status-icon">❌</span>
+        <p>Error checking code status.</p>
+      </div>
+    `;
+  }
 }
 
-async function renderProjects() {
-  const projects = await api.getProjects(filterCategory.value);
-  projectList.innerHTML = projects.length ? projects.map(projectTemplate).join('') : '<p>Keine Projekte gefunden.</p>';
+// Check Account Status
+async function checkAccountStatus(userId) {
+  try {
+    accountStatusResult.innerHTML = '<div class="loading"><span class="spinner"></span></div>';
+
+    const response = await fetch(`/api/user/${encodeURIComponent(userId)}`);
+    const data = await response.json();
+
+    if (!data.found || !data.verified) {
+      accountStatusResult.innerHTML = `
+        <div class="status-card">
+          <span class="status-icon">❌</span>
+          <p>This Roblox account is not linked yet.</p>
+          <p style="font-size: 0.85rem; opacity: 0.7; margin-top: 10px;">Go to the game and use a code to link!</p>
+        </div>
+      `;
+      return;
+    }
+
+    const firstVerified = new Date(data.firstVerified).toLocaleString('en-US');
+    const lastVerified = new Date(data.lastVerified).toLocaleString('en-US');
+
+    accountStatusResult.innerHTML = `
+      <div class="status-card linked">
+        <span class="status-icon">✅</span>
+        <p><strong>Account Linked!</strong></p>
+        <p><strong>Roblox ID:</strong> ${data.robloxUserId}</p>
+        <p><strong>First Verified:</strong> ${firstVerified}</p>
+        <p><strong>Last Activity:</strong> ${lastVerified}</p>
+        <p><strong>Codes Verified:</strong> ${data.codesVerified}</p>
+      </div>
+    `;
+  } catch (error) {
+    console.error('Error checking account status:', error);
+    accountStatusResult.innerHTML = `
+      <div class="status-card">
+        <span class="status-icon">❌</span>
+        <p>Error checking account status.</p>
+      </div>
+    `;
+  }
 }
 
-function getFormData() {
-  return {
-    title: document.getElementById('title').value.trim(),
-    category: document.getElementById('category').value,
-    description: document.getElementById('description').value.trim(),
-    difficulty: document.getElementById('difficulty').value,
-    date: document.getElementById('date').value
-  };
-}
-
-function resetForm() {
-  projectForm.reset();
-  document.getElementById('projectId').value = '';
-  cancelEditBtn.classList.add('hidden');
-  submitBtn.textContent = 'Projekt speichern';
-}
-
-projectForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const id = document.getElementById('projectId').value;
-  const payload = getFormData();
-
-  if (id) {
-    await api.updateProject(id, payload);
+// Helper: Show/Hide Loading State
+function showLoading(button, isLoading) {
+  if (isLoading) {
+    button.disabled = true;
+    button.classList.add('loading');
+    button.dataset.originalText = button.innerHTML;
+    button.innerHTML = '<span class="spinner"></span>';
   } else {
-    await api.createProject(payload);
+    button.disabled = false;
+    button.classList.remove('loading');
+    if (button.dataset.originalText) {
+      button.innerHTML = button.dataset.originalText;
+    }
   }
-
-  resetForm();
-  await renderProjects();
-});
-
-projectList.addEventListener('click', async (event) => {
-  const editId = event.target.dataset.edit;
-  const deleteId = event.target.dataset.delete;
-
-  if (deleteId) {
-    await api.deleteProject(deleteId);
-    await renderProjects();
-  }
-
-  if (editId) {
-    const projects = await api.getProjects('Alle');
-    const project = projects.find((entry) => entry.id === editId);
-    if (!project) return;
-
-    document.getElementById('projectId').value = project.id;
-    document.getElementById('title').value = project.title;
-    document.getElementById('category').value = project.category;
-    document.getElementById('description').value = project.description;
-    document.getElementById('difficulty').value = project.difficulty;
-    document.getElementById('date').value = project.date;
-    cancelEditBtn.classList.remove('hidden');
-    submitBtn.textContent = 'Projekt aktualisieren';
-  }
-});
-
-cancelEditBtn.addEventListener('click', resetForm);
-filterCategory.addEventListener('change', renderProjects);
-
-const chatToggle = document.getElementById('chatToggle');
-const chatWindow = document.getElementById('chatWindow');
-const closeChat = document.getElementById('closeChat');
-const chatMessages = document.getElementById('chatMessages');
-const chatForm = document.getElementById('chatForm');
-
-function addMessage(role, text) {
-  const message = document.createElement('div');
-  message.className = `msg ${role}`;
-  message.textContent = text;
-  chatMessages.appendChild(message);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
-chatToggle.addEventListener('click', () => chatWindow.classList.toggle('hidden'));
-closeChat.addEventListener('click', () => chatWindow.classList.add('hidden'));
-
-chatForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-
-  addMessage('user', text);
-  input.value = '';
-  addMessage('bot', 'Denke nach …');
-
-  const data = await api.chat(text);
-  chatMessages.lastChild.remove();
-  addMessage('bot', data.reply || 'Keine Antwort erhalten.');
-});
-
-randomFact();
-setInterval(randomFact, 8000);
-renderProjects();
-addMessage('bot', 'Hi! Ich bin dein MINT-KI-Assistent. Frag mich alles zu Informatik, Robotik oder Naturwissenschaften.');

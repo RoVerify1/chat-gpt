@@ -4,191 +4,262 @@ const fs = require('fs/promises');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, '..', 'data', 'projects.json');
+const DATA_DIR = path.join(__dirname, '..', 'data');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const CODES_FILE = path.join(DATA_DIR, 'codes.json');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-const fallbackProjects = [
-  {
-    id: cryptoRandomId(),
-    title: 'Einführung in Arduino LEDs',
-    category: 'Arduino / ESP32',
-    description: 'Steuere eine LED mit digitalWrite und lerne erste Hardware-Grundlagen.',
-    difficulty: 'Einsteiger',
-    date: '2026-04-29'
-  },
-  {
-    id: cryptoRandomId(),
-    title: 'Python Schleifen-Challenge',
-    category: 'Programmieren',
-    description: 'Übe for- und while-Schleifen mit kleinen MINT-Aufgaben.',
-    difficulty: 'Mittel',
-    date: '2026-04-29'
+// Helper: Generate random code (6 characters, alphanumeric)
+function generateCode() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-];
-
-function cryptoRandomId() {
-  return `proj_${Date.now()}_${Math.random().toString(16).slice(2, 10)}`;
+  return code;
 }
 
-async function ensureDataFile() {
+// Helper: Ensure data files exist
+async function ensureDataFiles() {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  
   try {
-    await fs.access(DATA_FILE);
+    await fs.access(USERS_FILE);
   } catch {
-    await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
-    await fs.writeFile(DATA_FILE, JSON.stringify(fallbackProjects, null, 2), 'utf-8');
+    await fs.writeFile(USERS_FILE, JSON.stringify([], null, 2), 'utf-8');
+  }
+  
+  try {
+    await fs.access(CODES_FILE);
+  } catch {
+    await fs.writeFile(CODES_FILE, JSON.stringify([], null, 2), 'utf-8');
   }
 }
 
-async function readProjects() {
-  await ensureDataFile();
-  const raw = await fs.readFile(DATA_FILE, 'utf-8');
+// Helper: Read codes
+async function readCodes() {
+  await ensureDataFiles();
+  const raw = await fs.readFile(CODES_FILE, 'utf-8');
   return JSON.parse(raw || '[]');
 }
 
-async function writeProjects(projects) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(projects, null, 2), 'utf-8');
+// Helper: Write codes
+async function writeCodes(codes) {
+  await fs.writeFile(CODES_FILE, JSON.stringify(codes, null, 2), 'utf-8');
 }
 
-app.get('/api/projects', async (req, res) => {
-  try {
-    const { category } = req.query;
-    const projects = await readProjects();
-    const filtered = category && category !== 'Alle'
-      ? projects.filter((project) => project.category === category)
-      : projects;
-    res.json(filtered);
-  } catch (error) {
-    res.status(500).json({ message: 'Fehler beim Laden der Projekte.' });
+// Helper: Read users
+async function readUsers() {
+  await ensureDataFiles();
+  const raw = await fs.readFile(USERS_FILE, 'utf-8');
+  return JSON.parse(raw || '[]');
+}
+
+// Helper: Write users
+async function writeUsers(users) {
+  await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+}
+
+// Clean up expired codes (older than 5 minutes)
+async function cleanupExpiredCodes() {
+  const codes = await readCodes();
+  const now = Date.now();
+  const fiveMinutes = 5 * 60 * 1000;
+  const validCodes = codes.filter(code => (now - code.createdAt) < fiveMinutes && !code.linked);
+  if (validCodes.length !== codes.length) {
+    await writeCodes(validCodes);
   }
-});
+  return validCodes;
+}
 
-app.post('/api/projects', async (req, res) => {
+// POST /api/generate-code - Generate a new verification code
+app.post('/api/generate-code', async (req, res) => {
   try {
-    const { title, category, description, difficulty, date } = req.body;
-
-    if (!title || !category || !description || !difficulty || !date) {
-      return res.status(400).json({ message: 'Bitte alle Projektfelder ausfüllen.' });
+    // Clean up expired codes first
+    await cleanupExpiredCodes();
+    
+    const codes = await readCodes();
+    
+    // Check if there's already an unlinked code (prevent spam)
+    const existingUnlinked = codes.find(c => !c.linked);
+    if (existingUnlinked) {
+      return res.json({ 
+        success: false, 
+        message: 'Du hast bereits einen aktiven Code. Verwende diesen oder warte bis er abläuft.',
+        code: existingUnlinked.code 
+      });
     }
-
-    const projects = await readProjects();
-    const newProject = {
-      id: cryptoRandomId(),
-      title,
-      category,
-      description,
-      difficulty,
-      date
+    
+    // Generate new code
+    const newCode = generateCode();
+    const codeEntry = {
+      code: newCode,
+      linked: false,
+      robloxUserId: null,
+      createdAt: Date.now()
     };
-
-    projects.unshift(newProject);
-    await writeProjects(projects);
-
-    return res.status(201).json(newProject);
-  } catch (error) {
-    return res.status(500).json({ message: 'Fehler beim Erstellen des Projekts.' });
-  }
-});
-
-app.put('/api/projects/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, category, description, difficulty, date } = req.body;
-
-    const projects = await readProjects();
-    const index = projects.findIndex((project) => project.id === id);
-
-    if (index === -1) {
-      return res.status(404).json({ message: 'Projekt nicht gefunden.' });
-    }
-
-    projects[index] = {
-      ...projects[index],
-      title: title || projects[index].title,
-      category: category || projects[index].category,
-      description: description || projects[index].description,
-      difficulty: difficulty || projects[index].difficulty,
-      date: date || projects[index].date
-    };
-
-    await writeProjects(projects);
-    return res.json(projects[index]);
-  } catch (error) {
-    return res.status(500).json({ message: 'Fehler beim Aktualisieren des Projekts.' });
-  }
-});
-
-app.delete('/api/projects/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const projects = await readProjects();
-    const filtered = projects.filter((project) => project.id !== id);
-
-    if (filtered.length === projects.length) {
-      return res.status(404).json({ message: 'Projekt nicht gefunden.' });
-    }
-
-    await writeProjects(filtered);
-    return res.status(204).send();
-  } catch (error) {
-    return res.status(500).json({ message: 'Fehler beim Löschen des Projekts.' });
-  }
-});
-
-app.post('/api/ai/chat', async (req, res) => {
-  const { message } = req.body;
-
-  if (!message) {
-    return res.status(400).json({ message: 'Bitte eine Nachricht senden.' });
-  }
-
-  const hfApiKey = process.env.HF_API_KEY;
-
-  if (!hfApiKey) {
-    return res.json({
-      reply: `KI ist im Demo-Modus 🤖\n\nDeine Frage: "${message}"\n\n` +
-        'Für volle KI-Antworten hinterlege bitte die Umgebungsvariable HF_API_KEY.'
-    });
-  }
-
-  try {
-    const response = await fetch(
-      'https://api-inference.huggingface.co/models/google/flan-t5-large',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${hfApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          inputs: `Du bist ein MINT-Tutor. Erkläre verständlich für Schüler:innen: ${message}`
-        })
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HF API Fehler: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const reply = Array.isArray(data) ? data[0]?.generated_text : data?.generated_text;
-
-    return res.json({
-      reply: reply || 'Ich konnte gerade keine Antwort generieren. Versuche es erneut.'
+    
+    codes.push(codeEntry);
+    await writeCodes(codes);
+    
+    return res.json({ 
+      success: true, 
+      code: newCode,
+      expiresIn: 300 // 5 minutes in seconds
     });
   } catch (error) {
-    return res.json({
-      reply: 'KI ist im Demo-Modus 🤖\nEs gab ein Problem mit der Hugging Face API. Bitte später erneut versuchen.'
-    });
+    console.error('Error generating code:', error);
+    return res.status(500).json({ success: false, message: 'Fehler beim Generieren des Codes.' });
   }
 });
 
+// POST /api/verify-code - Verify a code from Roblox game
+app.post('/api/verify-code', async (req, res) => {
+  try {
+    const { code, robloxUserId } = req.body;
+    
+    if (!code || !robloxUserId) {
+      return res.status(400).json({ success: false, message: 'Code und Roblox UserId erforderlich.' });
+    }
+    
+    const codes = await readCodes();
+    const now = Date.now();
+    const fiveMinutes = 5 * 60 * 1000;
+    
+    // Find the code
+    const codeIndex = codes.findIndex(c => c.code === code.toUpperCase());
+    
+    if (codeIndex === -1) {
+      return res.status(404).json({ success: false, message: 'Ungültiger Code.' });
+    }
+    
+    const codeEntry = codes[codeIndex];
+    
+    // Check if already linked
+    if (codeEntry.linked) {
+      return res.status(400).json({ success: false, message: 'Dieser Code wurde bereits verwendet.' });
+    }
+    
+    // Check if expired
+    if ((now - codeEntry.createdAt) >= fiveMinutes) {
+      codes.splice(codeIndex, 1);
+      await writeCodes(codes);
+      return res.status(400).json({ success: false, message: 'Code ist abgelaufen.' });
+    }
+    
+    // Mark as linked
+    codeEntry.linked = true;
+    codeEntry.robloxUserId = robloxUserId;
+    codeEntry.linkedAt = now;
+    
+    await writeCodes(codes);
+    
+    // Add/update user in users database
+    const users = await readUsers();
+    let user = users.find(u => u.robloxUserId === robloxUserId);
+    
+    if (user) {
+      user.codesVerified = (user.codesVerified || 0) + 1;
+      user.lastVerified = now;
+    } else {
+      user = {
+        robloxUserId: robloxUserId,
+        codesVerified: 1,
+        firstVerified: now,
+        lastVerified: now
+      };
+      users.push(user);
+    }
+    
+    await writeUsers(users);
+    
+    return res.json({ 
+      success: true, 
+      message: 'Account erfolgreich verknüpft!',
+      robloxUserId: robloxUserId
+    });
+  } catch (error) {
+    console.error('Error verifying code:', error);
+    return res.status(500).json({ success: false, message: 'Fehler beim Verifizieren des Codes.' });
+  }
+});
+
+// GET /api/status/:code - Check status of a code
+app.get('/api/status/:code', async (req, res) => {
+  try {
+    const { code } = req.params;
+    const codes = await readCodes();
+    const now = Date.now();
+    const fiveMinutes = 5 * 60 * 1000;
+    
+    const codeEntry = codes.find(c => c.code === code.toUpperCase());
+    
+    if (!codeEntry) {
+      return res.json({ 
+        found: false, 
+        linked: false,
+        message: 'Code nicht gefunden.'
+      });
+    }
+    
+    const isExpired = (now - codeEntry.createdAt) >= fiveMinutes;
+    
+    return res.json({ 
+      found: true,
+      linked: codeEntry.linked,
+      expired: isExpired,
+      robloxUserId: codeEntry.linked ? codeEntry.robloxUserId : null,
+      createdAt: codeEntry.createdAt
+    });
+  } catch (error) {
+    console.error('Error checking status:', error);
+    return res.status(500).json({ found: false, linked: false, message: 'Fehler beim Prüfen des Status.' });
+  }
+});
+
+// GET /api/user/:robloxUserId - Get user info by Roblox ID
+app.get('/api/user/:robloxUserId', async (req, res) => {
+  try {
+    const { robloxUserId } = req.params;
+    const users = await readUsers();
+    
+    const user = users.find(u => u.robloxUserId === parseInt(robloxUserId));
+    
+    if (!user) {
+      return res.json({ 
+        found: false, 
+        verified: false
+      });
+    }
+    
+    return res.json({ 
+      found: true,
+      verified: true,
+      robloxUserId: user.robloxUserId,
+      codesVerified: user.codesVerified,
+      firstVerified: user.firstVerified,
+      lastVerified: user.lastVerified
+    });
+  } catch (error) {
+    console.error('Error getting user:', error);
+    return res.status(500).json({ found: false, verified: false, message: 'Fehler beim Laden der User-Daten.' });
+  }
+});
+
+// Serve homepage
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
+// Start server
 app.listen(PORT, async () => {
-  await ensureDataFile();
-  console.log(`MINT Lab Server läuft auf http://localhost:${PORT}`);
+  await ensureDataFiles();
+  console.log(`Roblox Account Linking Server läuft auf http://localhost:${PORT}`);
+  console.log('API Endpoints:');
+  console.log('  POST /api/generate-code - Generate new verification code');
+  console.log('  POST /api/verify-code   - Verify code from Roblox game');
+  console.log('  GET  /api/status/:code  - Check code status');
+  console.log('  GET  /api/user/:id      - Get user info by Roblox ID');
 });
