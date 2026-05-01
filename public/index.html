@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XerionX | Next Gen Roblox Assets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: #050505;
+            color: #ffffff;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-strong {
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glow-orange {
+            box-shadow: 0 0 40px rgba(255, 106, 0, 0.3);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(255, 106, 0, 0.5);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6a00, #ff9e00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6a00, #ff8c00);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 106, 0, 0.4);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 106, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(255, 106, 0, 0.15);
+        }
+
+        /* Modal Animation */
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Cart Slide-in */
+        .cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff6a00;
+            border-radius: 4px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 106, 0, 0.1);
+            border-top: 3px solid #ff6a00;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6a00;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-strong">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-[#ff6a00] to-[#ff8c00] rounded-lg flex items-center justify-center glow-orange">
+                        <span class="text-white font-bold text-xl">X</span>
+                    </div>
+                    <span class="text-2xl font-bold gradient-text">XerionX</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-300 hover:text-[#ff6a00] transition">Home</a>
+                    <a href="#shop" class="text-gray-300 hover:text-[#ff6a00] transition">Shop</a>
+                    <a href="#redeem" class="text-gray-300 hover:text-[#ff6a00] transition">Redeem</a>
+                    <a href="#admin" class="text-gray-300 hover:text-[#ff6a00] transition">Admin</a>
+                </div>
+
+                <button onclick="toggleCart()" class="relative p-3 glass rounded-lg hover:bg-white/10 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-[#ff6a00] rounded-full text-xs flex items-center justify-center font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20">
+        <div id="particles" class="absolute inset-0 overflow-hidden"></div>
+        
+        <div class="absolute inset-0 bg-gradient-to-b from-[#ff6a00]/5 via-transparent to-transparent"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <div class="inline-block mb-6 px-6 py-2 glass rounded-full border border-[#ff6a00]/30">
+                <span class="text-[#ff6a00] font-medium">🚀 Next Generation Roblox Assets</span>
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-extrabold mb-6 leading-tight">
+                Premium <span class="gradient-text text-glow">Roblox</span><br>
+                Assets & Scripts
+            </h1>
+            
+            <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+                Discover high-quality scripts, models, and assets for your Roblox games. 
+                Instant delivery with secure code redemption system.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#shop" class="btn-primary px-8 py-4 rounded-xl font-bold text-lg">
+                    Browse Shop →
+                </a>
+                <a href="#redeem" class="glass px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition">
+                    Redeem Code
+                </a>
+            </div>
+
+            <div class="mt-20 grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+                <div class="text-center">
+                    <div class="text-4xl font-bold gradient-text mb-2">500+</div>
+                    <div class="text-gray-500">Happy Customers</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold gradient-text mb-2">50+</div>
+                    <div class="text-gray-500">Premium Assets</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold gradient-text mb-2">24/7</div>
+                    <div class="text-gray-500">Instant Delivery</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold mb-4">Featured <span class="gradient-text">Products</span></h2>
+                <p class="text-gray-400 text-lg">Choose from our collection of premium assets</p>
+            </div>
+
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Products will be loaded here -->
+                <div class="col-span-full text-center py-20">
+                    <div class="spinner mx-auto mb-4"></div>
+                    <p class="text-gray-400">Loading products...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Redeem Section -->
+    <section id="redeem" class="py-20 px-6">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold mb-4">Redeem Your <span class="gradient-text">Code</span></h2>
+                <p class="text-gray-400 text-lg">Enter your purchase code to get your download link</p>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <div class="mb-6">
+                    <label class="block text-gray-400 mb-2">Enter Code</label>
+                    <input 
+                        type="text" 
+                        id="redeem-code"
+                        placeholder="XER-XXXX"
+                        class="w-full glass bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-xl font-mono tracking-wider focus:outline-none focus:border-[#ff6a00] transition uppercase"
+                    >
+                </div>
+
+                <button onclick="redeemCode()" class="w-full btn-primary py-4 rounded-xl font-bold text-lg">
+                    Redeem Now
+                </button>
+
+                <div id="redeem-result" class="mt-6 hidden"></div>
+            </div>
+
+            <div class="mt-12 glass p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6">How it works</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-[#ff6a00]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-[#ff6a00] font-bold">1</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">Purchase Asset</h4>
+                            <p class="text-gray-400">Buy any asset from our shop and receive a unique code.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-[#ff6a00]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-[#ff6a00] font-bold">2</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">Join Roblox Game</h4>
+                            <p class="text-gray-400">Join our official Roblox game experience.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-[#ff6a00]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-[#ff6a00] font-bold">3</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">Enter Code</h4>
+                            <p class="text-gray-400">Input your code in-game to receive the download link.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold mb-4">Admin <span class="gradient-text">Panel</span></h2>
+                <p class="text-gray-400 text-lg">Manage products and view generated codes</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Add Product Form -->
+                <div class="glass p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Add New Product</h3>
+                    <form onsubmit="addProduct(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-gray-400 mb-2">Product Name</label>
+                            <input type="text" name="name" required class="w-full glass bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#ff6a00] transition">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-2">Price (R$)</label>
+                            <input type="number" name="price" required class="w-full glass bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#ff6a00] transition">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-2">Download Link</label>
+                            <input type="url" name="downloadLink" required class="w-full glass bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#ff6a00] transition">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-2">Image URL (optional)</label>
+                            <input type="url" name="image" class="w-full glass bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#ff6a00] transition">
+                        </div>
+                        <button type="submit" class="w-full btn-primary py-3 rounded-xl font-bold">
+                            Add Product
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Codes List -->
+                <div class="glass p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Generated Codes</h3>
+                    <div id="codes-list" class="space-y-3 max-h-96 overflow-y-auto">
+                        <div class="text-center py-8 text-gray-400">Loading codes...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Management -->
+            <div class="mt-8 glass p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6">Manage Products</h3>
+                <div id="admin-products-list" class="space-y-3">
+                    <div class="text-center py-8 text-gray-400">Loading products...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/80 z-50 hidden glass-strong"></div>
+    <div id="cart-sidebar" class="cart-sidebar fixed top-0 right-0 h-full w-full max-w-md glass-strong z-50 p-6 overflow-y-auto">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold">Shopping Cart</h2>
+            <button onclick="toggleCart()" class="p-2 hover:bg-white/10 rounded-lg transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div id="cart-items" class="space-y-4 mb-8">
+            <div class="text-center py-12 text-gray-400">Your cart is empty</div>
+        </div>
+
+        <div class="border-t border-white/10 pt-6">
+            <div class="flex justify-between mb-4">
+                <span class="text-gray-400">Total:</span>
+                <span id="cart-total" class="text-xl font-bold">0 R$</span>
+            </div>
+            <button onclick="checkout()" class="w-full btn-primary py-4 rounded-xl font-bold text-lg">
+                Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Purchase Modal -->
+    <div id="purchase-modal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/90" onclick="closeModal()"></div>
+        <div class="modal-content relative glass p-8 rounded-2xl max-w-lg w-full">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div id="modal-content">
+                <!-- Content will be injected -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glass-strong py-12 px-6 mt-20">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-6">
+                <div class="w-10 h-10 bg-gradient-to-br from-[#ff6a00] to-[#ff8c00] rounded-lg flex items-center justify-center glow-orange">
+                    <span class="text-white font-bold text-xl">X</span>
+                </div>
+                <span class="text-2xl font-bold gradient-text">XerionX</span>
+            </div>
+            <p class="text-gray-500 mb-6">© 2024 XerionX. All rights reserved.</p>
+            <p class="text-gray-600 text-sm">Not affiliated with Roblox Corporation.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000/api' 
+            : 'https://your-render-backend.onrender.com/api';
+
+        // State
+        let cart = [];
+        let products = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            loadProducts();
+            loadCodes();
+        });
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                products = await response.json();
+                renderProducts();
+            } catch (error) {
+                console.error('Failed to load products:', error);
+                document.getElementById('products-grid').innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <p class="text-red-400">Failed to load products. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render products
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <p class="text-gray-400">No products available yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = products.map(product => `
+                <div class="glass p-6 rounded-2xl card-hover">
+                    ${product.image ? `
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-xl mb-4">
+                    ` : `
+                        <div class="w-full h-48 bg-gradient-to-br from-[#ff6a00]/20 to-[#ff8c00]/10 rounded-xl mb-4 flex items-center justify-center">
+                            <svg class="w-20 h-20 text-[#ff6a00]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                        </div>
+                    `}
+                    <h3 class="text-xl font-bold mb-2">${product.name}</h3>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold gradient-text">${product.price} R$</span>
+                        <button onclick="addToCart('${product._id}')" class="btn-primary px-6 py-2 rounded-lg font-bold">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            const product = products.find(p => p._id === productId);
+            if (product) {
+                cart.push(product);
+                updateCart();
+                toggleCart();
+            }
+        }
+
+        // Update cart UI
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartCount.textContent = cart.length;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="text-center py-12 text-gray-400">Your cart is empty</div>';
+                cartTotal.textContent = '0 R$';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="glass p-4 rounded-xl flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold">${item.name}</h4>
+                        <p class="text-[#ff6a00]">${item.price} R$</p>
+                    </div>
+                    <button onclick="removeFromCart(${index})" class="p-2 hover:bg-red-500/20 rounded-lg transition">
+                        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotal.textContent = `${total} R$`;
+        }
+
+        // Remove from cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        // Toggle cart
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Checkout
+        async function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            const modalContent = document.getElementById('modal-content');
+            const modal = document.getElementById('purchase-modal');
+            
+            modalContent.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="spinner mx-auto mb-4"></div>
+                    <p class="text-gray-400">Processing your order...</p>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+
+            try {
+                // Process each item in cart
+                const codes = [];
+                for (const item of cart) {
+                    const response = await fetch(`${API_URL}/create-order`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId: item._id })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        codes.push({ productName: item.name, code: data.code });
+                    }
+                }
+
+                if (codes.length > 0) {
+                    modalContent.innerHTML = `
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Order Complete!</h3>
+                            <p class="text-gray-400 mb-6">Save these codes and redeem them in our Roblox game:</p>
+                            <div class="space-y-3 mb-6">
+                                ${codes.map(c => `
+                                    <div class="glass p-4 rounded-xl">
+                                        <p class="text-sm text-gray-400 mb-1">${c.productName}</p>
+                                        <p class="text-2xl font-mono font-bold text-[#ff6a00]">${c.code}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="glass p-4 rounded-xl text-left mb-6">
+                                <h4 class="font-bold mb-2">📋 Instructions:</h4>
+                                <ol class="text-gray-400 space-y-1 text-sm list-decimal list-inside">
+                                    <li>Join our Roblox game</li>
+                                    <li>Find the code redemption terminal</li>
+                                    <li>Enter your code</li>
+                                    <li>Receive your download link in-game!</li>
+                                </ol>
+                            </div>
+                            <button onclick="closeModal()" class="btn-primary px-8 py-3 rounded-xl font-bold">
+                                Got it!
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Clear cart
+                    cart = [];
+                    updateCart();
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                modalContent.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Error</h3>
+                        <p class="text-gray-400 mb-6">Failed to process order. Please try again.</p>
+                        <button onclick="closeModal()" class="btn-primary px-8 py-3 rounded-xl font-bold">
+                            Close
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('purchase-modal').classList.remove('active');
+        }
+
+        // Redeem code
+        async function redeemCode() {
+            const codeInput = document.getElementById('redeem-code');
+            const resultDiv = document.getElementById('redeem-result');
+            const code = codeInput.value.trim().toUpperCase();
+
+            if (!code) {
+                resultDiv.innerHTML = '<div class="p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400">Please enter a code</div>';
+                resultDiv.classList.remove('hidden');
+                return;
+            }
+
+            resultDiv.innerHTML = '<div class="text-center py-4"><div class="spinner mx-auto mb-2"></div><p class="text-gray-400">Validating code...</p></div>';
+            resultDiv.classList.remove('hidden');
+
+            try {
+                const response = await fetch(`${API_URL}/redeem/${code}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="p-6 bg-green-500/20 border border-green-500/30 rounded-xl">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-green-400">Code Valid!</h4>
+                                    <p class="text-sm text-gray-400">${data.productName}</p>
+                                </div>
+                            </div>
+                            <a href="${data.downloadLink}" target="_blank" class="block w-full btn-primary py-3 rounded-xl font-bold text-center">
+                                📥 Download Now
+                            </a>
+                        </div>
+                    `;
+                    codeInput.value = '';
+                } else {
+                    resultDiv.innerHTML = `<div class="p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400">${data.error}</div>`;
+                }
+            } catch (error) {
+                console.error('Redeem error:', error);
+                resultDiv.innerHTML = '<div class="p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400">Failed to validate code. Please try again.</div>';
+            }
+        }
+
+        // Add product (Admin)
+        async function addProduct(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const product = {
+                name: formData.get('name'),
+                price: parseFloat(formData.get('price')),
+                downloadLink: formData.get('downloadLink'),
+                image: formData.get('image') || ''
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/products`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(product)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Product added successfully!');
+                    form.reset();
+                    loadProducts();
+                    loadAdminProducts();
+                }
+            } catch (error) {
+                console.error('Add product error:', error);
+                alert('Failed to add product');
+            }
+        }
+
+        // Load codes (Admin)
+        async function loadCodes() {
+            try {
+                const response = await fetch(`${API_URL}/codes`);
+                const codes = await response.json();
+                
+                const codesList = document.getElementById('codes-list');
+                
+                if (codes.length === 0) {
+                    codesList.innerHTML = '<div class="text-center py-8 text-gray-400">No codes generated yet</div>';
+                    return;
+                }
+
+                codesList.innerHTML = codes.map(code => `
+                    <div class="glass p-3 rounded-xl flex items-center justify-between">
+                        <div>
+                            <p class="font-mono font-bold text-[#ff6a00]">${code.code}</p>
+                            <p class="text-sm text-gray-400">${code.productName}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${code.isUsed ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}">
+                            ${code.isUsed ? 'USED' : 'OPEN'}
+                        </span>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Load codes error:', error);
+            }
+        }
+
+        // Load admin products
+        async function loadAdminProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const products = await response.json();
+                
+                const productsList = document.getElementById('admin-products-list');
+                
+                if (products.length === 0) {
+                    productsList.innerHTML = '<div class="text-center py-8 text-gray-400">No products yet</div>';
+                    return;
+                }
+
+                productsList.innerHTML = products.map(product => `
+                    <div class="glass p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold">${product.name}</h4>
+                            <p class="text-sm text-gray-400">${product.price} R$</p>
+                        </div>
+                        <button onclick="deleteProduct('${product._id}')" class="p-2 hover:bg-red-500/20 rounded-lg transition">
+                            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Load admin products error:', error);
+            }
+        }
+
+        // Delete product
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/products/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadProducts();
+                    loadAdminProducts();
+                }
+            } catch (error) {
+                console.error('Delete product error:', error);
+                alert('Failed to delete product');
+            }
+        }
+
+        // Load admin products on init
+        loadAdminProducts();
+    </script>
+</body>
+</html>
