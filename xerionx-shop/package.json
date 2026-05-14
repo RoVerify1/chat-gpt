@@ -1,0 +1,40 @@
+{
+  "name": "xerionx-shop-system",
+  "version": "1.0.0",
+  "description": "XerionX Shop System - Premium Discord Bot with Roblox Integration",
+  "main": "bot/index.js",
+  "scripts": {
+    "start:bot": "node bot/index.js",
+    "start:api": "node api/server.js",
+    "start": "concurrently \"npm run start:bot\" \"npm run start:api\"",
+    "dev:bot": "nodemon bot/index.js",
+    "dev:api": "nodemon api/server.js",
+    "dev": "concurrently \"npm run dev:bot\" \"npm run dev:api\""
+  },
+  "keywords": [
+    "discord",
+    "roblox",
+    "shop",
+    "automation"
+  ],
+  "author": "XerionX",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.1.1",
+    "dotenv": "^16.4.1",
+    "crypto": "^1.0.1",
+    "rate-limit": "^0.2.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0",
+    "axios": "^1.6.5"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.3"
+  }
+}
