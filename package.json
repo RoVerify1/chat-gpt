@@ -1,0 +1,28 @@
+{
+  "name": "xerionx-bot",
+  "version": "1.0.0",
+  "description": "XerionX Production Discord Bot - Modmail, Tickets, Shop & Roblox Integration",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "xerionx",
+    "modmail",
+    "shop",
+    "roblox"
+  ],
+  "author": "XerionX",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
