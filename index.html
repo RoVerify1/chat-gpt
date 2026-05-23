@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RobloxVerify - Discord Verifizierung</title>
+    <title>RobloxAuth - Discord Verifizierung</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         :root {
             --primary-orange: #FF6B35;
-            --primary-red: #F7931E;
-            --secondary-red: #FF4500;
-            --dark-bg: #1a1a2e;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --primary-red: #FF4500;
+            --secondary-red: #FF2D00;
+            --accent-yellow: #FFA500;
+            --dark-bg: #0f0f1e;
+            --card-bg: rgba(255, 255, 255, 0.03);
             --text-light: #ffffff;
-            --text-gray: #b8b8b8;
+            --text-gray: #a0a0b0;
+            --border-color: rgba(255, 107, 53, 0.3);
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #2d1b1b 50%, #1a1a2e 100%);
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a0f0f 50%, #0f0f1e 100%);
             min-height: 100vh;
             color: var(--text-light);
             overflow-x: hidden;
@@ -41,42 +44,45 @@
             overflow: hidden;
         }
 
-        .bg-animation .circle {
+        .bg-animation .gradient-orb {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
-            opacity: 0.1;
+            filter: blur(80px);
+            opacity: 0.4;
             animation: float 20s infinite ease-in-out;
         }
 
-        .bg-animation .circle:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            left: -100px;
-            top: -100px;
+        .bg-animation .gradient-orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            left: -200px;
+            top: -200px;
             animation-delay: 0s;
         }
 
-        .bg-animation .circle:nth-child(2) {
-            width: 300px;
-            height: 300px;
-            right: -50px;
+        .bg-animation .gradient-orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--secondary-red), var(--accent-yellow));
+            right: -150px;
             top: 20%;
             animation-delay: 5s;
         }
 
-        .bg-animation .circle:nth-child(3) {
-            width: 350px;
-            height: 350px;
-            bottom: -100px;
+        .bg-animation .gradient-orb:nth-child(3) {
+            width: 450px;
+            height: 450px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-orange));
+            bottom: -150px;
             left: 30%;
             animation-delay: 10s;
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -50px) rotate(120deg); }
-            66% { transform: translate(-20px, 30px) rotate(240deg); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 30px) scale(0.9); }
         }
 
         /* Navigation */
@@ -85,37 +91,65 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 5%;
-            backdrop-filter: blur(10px);
-            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            background: rgba(15, 15, 30, 0.8);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
+            gap: 12px;
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            cursor: pointer;
         }
 
-        .logo i {
-            font-size: 32px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: white;
+            border-radius: 4px;
+            opacity: 0.9;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: var(--primary-red);
+            border-radius: 50%;
+            bottom: 8px;
+            right: 8px;
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 35px;
             align-items: center;
         }
 
@@ -124,6 +158,7 @@
             text-decoration: none;
             transition: all 0.3s;
             font-weight: 500;
+            font-size: 15px;
         }
 
         .nav-links a:hover {
@@ -132,25 +167,28 @@
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 12px 28px;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
             color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.6);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
         }
 
         .btn-secondary {
@@ -164,13 +202,25 @@
             color: white;
         }
 
+        .btn-discord {
+            background: #5865F2;
+            color: white;
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
+        }
+
+        .btn-discord:hover {
+            background: #4752C4;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(88, 101, 242, 0.6);
+        }
+
         /* Hero Section */
         .hero {
-            margin-top: 80px;
+            margin-top: 100px;
             padding: 80px 5%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 80px;
             align-items: center;
             max-width: 1400px;
             margin-left: auto;
@@ -178,26 +228,50 @@
         }
 
         .hero-content h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff, var(--primary-orange));
+            font-size: 56px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-orange) 50%, var(--primary-red) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
+            line-height: 1.1;
+            font-weight: 800;
         }
 
         .hero-content p {
-            font-size: 18px;
+            font-size: 20px;
             color: var(--text-gray);
-            margin-bottom: 30px;
-            line-height: 1.6;
+            margin-bottom: 40px;
+            line-height: 1.7;
         }
 
         .hero-buttons {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .hero-stat h3 {
+            font-size: 32px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .hero-stat p {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin: 0;
         }
 
         .hero-image {
@@ -208,337 +282,57 @@
         }
 
         .verification-card {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.2));
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 107, 53, 0.3);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(255, 69, 0, 0.15));
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 107, 53, 0.4);
             border-radius: 30px;
-            padding: 40px;
+            padding: 50px 40px;
             width: 100%;
-            max-width: 450px;
-            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3);
-            animation: pulse 3s infinite;
+            max-width: 480px;
+            box-shadow: 0 25px 80px rgba(255, 107, 53, 0.3), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: cardFloat 6s infinite ease-in-out;
         }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3); }
-            50% { box-shadow: 0 25px 80px rgba(255, 107, 53, 0.5); }
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
         .verification-card h2 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             color: var(--primary-orange);
             font-size: 28px;
+            font-weight: 700;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid rgba(255, 107, 53, 0.3);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-orange);
-            box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
-        }
-
-        .form-group input::placeholder {
-            color: var(--text-gray);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: var(--text-gray);
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 107, 53, 0.3);
-        }
-
-        .divider span {
-            padding: 0 15px;
-        }
-
-        .social-login {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .social-btn {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid rgba(255, 107, 53, 0.3);
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-weight: 500;
-        }
-
-        .social-btn:hover {
-            background: rgba(255, 107, 53, 0.2);
-            border-color: var(--primary-orange);
-            transform: translateY(-2px);
-        }
-
-        .social-btn.discord {
-            background: #5865F2;
-            border-color: #5865F2;
-        }
-
-        .social-btn.roblox {
-            background: #000;
-            border-color: var(--primary-orange);
-        }
-
-        .form-footer {
-            text-align: center;
-            color: var(--text-gray);
-            margin-top: 20px;
-        }
-
-        .form-footer a {
-            color: var(--primary-orange);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 100px 5%;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .features-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title h2 {
-            font-size: 42px;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #fff, var(--primary-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-title p {
-            color: var(--text-gray);
-            font-size: 18px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 107, 53, 0.2);
-            border-radius: 20px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-orange);
-            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.3);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 25px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            color: white;
-        }
-
-        .feature-card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: var(--primary-orange);
-        }
-
-        .feature-card p {
-            color: var(--text-gray);
-            line-height: 1.6;
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: 80px 5%;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .stat-item h3 {
-            font-size: 48px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-
-        .stat-item p {
-            color: var(--text-gray);
-            font-size: 18px;
-        }
-
-        /* CTA Section */
-        .cta {
-            padding: 100px 5%;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.1));
-        }
-
-        .cta h2 {
-            font-size: 42px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff, var(--primary-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .cta p {
-            color: var(--text-gray);
-            font-size: 18px;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 40px 5%;
-            text-align: center;
-            border-top: 1px solid rgba(255, 107, 53, 0.2);
-        }
-
-        footer p {
-            color: var(--text-gray);
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--text-gray);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-orange);
-        }
-
-        /* Responsive */
-        @media (max-width: 968px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .hero-content h1 {
-                font-size: 36px;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Tab Switching */
         .tab-container {
             display: flex;
             gap: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px;
+            border-radius: 15px;
         }
 
         .tab {
             flex: 1;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 107, 53, 0.3);
-            border-radius: 10px;
+            padding: 14px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
             color: var(--text-gray);
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
+            font-size: 15px;
         }
 
         .tab.active {
-            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-red));
-            border-color: var(--primary-orange);
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
             color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
         }
 
         .form-section {
@@ -555,16 +349,119 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .checkbox-group {
+        .oauth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .oauth-btn {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .oauth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .oauth-btn.discord {
+            background: linear-gradient(135deg, #5865F2, #4752C4);
+            border-color: #5865F2;
+        }
+
+        .oauth-btn.roblox {
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            border-color: var(--primary-orange);
+        }
+
+        .oauth-btn:hover.discord {
+            background: linear-gradient(135deg, #4752C4, #3a45a8);
+        }
+
+        .oauth-btn:hover.roblox {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider span {
+            padding: 0 15px;
+        }
+
+        .form-group {
             margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 25px;
         }
 
         .checkbox-group input[type="checkbox"] {
             width: 18px;
             height: 18px;
+            margin-top: 2px;
             accent-color: var(--primary-orange);
             cursor: pointer;
         }
@@ -572,34 +469,420 @@
         .checkbox-group label {
             color: var(--text-gray);
             cursor: pointer;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         .checkbox-group a {
             color: var(--primary-orange);
+            text-decoration: none;
+        }
+
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        .form-footer {
+            text-align: center;
+            color: var(--text-gray);
+            margin-top: 25px;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: var(--primary-orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 5%;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-title h2 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff, var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .section-title p {
+            color: var(--text-gray);
+            font-size: 18px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px 35px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-orange), var(--primary-red));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-orange);
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.2);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: var(--primary-orange);
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-gray);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 120px 5%;
+        }
+
+        .steps-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .step {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+            border-color: var(--primary-orange);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .step-content h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--primary-orange);
+        }
+
+        .step-content p {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 120px 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 69, 0, 0.1));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+            animation: pulse 4s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .cta p {
+            color: var(--text-gray);
+            font-size: 20px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 60px 5% 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 15px;
+        }
+
+        .footer-brand p {
+            color: var(--text-gray);
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .footer-links h4 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 60px;
+            }
+
+            .hero-content h1 {
+                font-size: 42px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Animation */
+        .success-checkmark {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #00C853, #00E676);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            animation: scaleIn 0.5s;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <!-- Background Animation -->
     <div class="bg-animation">
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
     </div>
 
     <!-- Navigation -->
     <nav>
-        <div class="logo">
-            <i class="fas fa-shield-alt"></i>
-            RobloxVerify
+        <div class="logo" onclick="window.scrollTo(0,0)">
+            <div class="logo-icon"></div>
+            RobloxAuth
         </div>
         <div class="nav-links">
             <a href="#home">Startseite</a>
             <a href="#features">Funktionen</a>
-            <a href="#pricing">Preise</a>
+            <a href="#how-it-works">So funktioniert's</a>
             <a href="#support">Support</a>
-            <a href="#" class="btn btn-secondary">Login</a>
-            <a href="#" class="btn btn-primary">Registrieren</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" target="_blank">
+                <i class="fab fa-discord"></i> Discord Login
+            </a>
         </div>
     </nav>
 
@@ -607,20 +890,34 @@
     <section class="hero" id="home">
         <div class="hero-content">
             <h1>Sichere Discord Verifizierung für Roblox</h1>
-            <p>Verifiziere deine Roblox-Identität sicher und schnell in deinem Discord Server. Mit unserem OAuth2-System bleibt dein Account geschützt.</p>
+            <p>Verbinde deinen Roblox-Account sicher mit Discord. Automatisierte Rollenvergabe, OAuth2-Sicherheit und blitzschnelle Verifizierung für deine Community.</p>
             <div class="hero-buttons">
-                <a href="#" class="btn btn-primary">
-                    <i class="fab fa-discord"></i> Mit Discord verbinden
+                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" target="_blank">
+                    <i class="fab fa-discord"></i> Mit Discord starten
                 </a>
-                <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-play"></i> Demo ansehen
+                <a href="#how-it-works" class="btn btn-secondary">
+                    <i class="fas fa-play"></i> Anleitung
                 </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <h3>50K+</h3>
+                    <p>Verifizierte User</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>1000+</h3>
+                    <p>Discord Server</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>99.9%</h3>
+                    <p>Uptime</p>
+                </div>
             </div>
         </div>
 
         <div class="hero-image">
             <div class="verification-card">
-                <h2><i class="fas fa-user-shield"></i> Verifizierung</h2>
+                <h2><i class="fas fa-shield-alt"></i> Verifizierung</h2>
                 
                 <div class="tab-container">
                     <button class="tab active" onclick="switchTab('login')">Login</button>
@@ -629,29 +926,31 @@
 
                 <!-- Login Form -->
                 <div id="loginForm" class="form-section active">
-                    <div class="social-login">
-                        <button class="social-btn discord">
-                            <i class="fab fa-discord"></i> Discord
-                        </button>
-                        <button class="social-btn roblox">
-                            <i class="fas fa-gamepad"></i> Roblox
+                    <div class="oauth-buttons">
+                        <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="oauth-btn discord" target="_blank">
+                            <i class="fab fa-discord"></i>
+                            Mit Discord anmelden
+                        </a>
+                        <button class="oauth-btn roblox" onclick="alert('Roblox OAuth wird vorbereitet...')">
+                            <i class="fas fa-gamepad"></i>
+                            Mit Roblox anmelden
                         </button>
                     </div>
                     
                     <div class="divider">
-                        <span>oder</span>
+                        <span>oder mit E-Mail</span>
                     </div>
 
-                    <form>
+                    <form onsubmit="handleLogin(event)">
                         <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> E-Mail</label>
+                            <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
                             <input type="email" placeholder="deine@email.de" required>
                         </div>
                         <div class="form-group">
                             <label><i class="fas fa-lock"></i> Passwort</label>
                             <input type="password" placeholder="••••••••" required>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
                             <i class="fas fa-sign-in-alt"></i> Anmelden
                         </button>
                     </form>
@@ -659,13 +958,13 @@
 
                 <!-- Register Form -->
                 <div id="registerForm" class="form-section">
-                    <form>
+                    <form onsubmit="handleRegister(event)">
                         <div class="form-group">
                             <label><i class="fas fa-user"></i> Roblox Username</label>
                             <input type="text" placeholder="DeinRobloxName" required>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> E-Mail</label>
+                            <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
                             <input type="email" placeholder="deine@email.de" required>
                         </div>
                         <div class="form-group">
@@ -674,38 +973,18 @@
                         </div>
                         <div class="checkbox-group">
                             <input type="checkbox" id="terms" required>
-                            <label for="terms">Ich akzeptiere die <a href="#">AGB</a> und <a href="#">Datenschutz</a></label>
+                            <label for="terms">Ich akzeptiere die <a href="#">AGB</a> und <a href="#">Datenschutzerklärung</a></label>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
                             <i class="fas fa-user-plus"></i> Konto erstellen
                         </button>
                     </form>
                 </div>
 
                 <div class="form-footer">
-                    <p>Noch kein Konto? <a href="#" onclick="switchTab('register')">Jetzt registrieren</a></p>
+                    <p id="formFooterText">Noch kein Konto? <a href="#" onclick="switchTab('register')">Jetzt registrieren</a></p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stat-item">
-            <h3>50K+</h3>
-            <p>Verifizierte User</p>
-        </div>
-        <div class="stat-item">
-            <h3>1000+</h3>
-            <p>Discord Server</p>
-        </div>
-        <div class="stat-item">
-            <h3>99.9%</h3>
-            <p>Uptime</p>
-        </div>
-        <div class="stat-item">
-            <h3>24/7</h3>
-            <p>Support</p>
         </div>
     </section>
 
@@ -713,51 +992,84 @@
     <section class="features" id="features">
         <div class="features-container">
             <div class="section-title">
-                <h2>Warum RobloxVerify?</h2>
-                <p>Die beste Lösung für deine Roblox-Discord Community</p>
+                <h2>Warum RobloxAuth?</h2>
+                <p>Die professionellste Lösung für deine Roblox-Discord Community</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Sichere OAuth2 Verifizierung</h3>
-                    <p>Nutze die offizielle Roblox OAuth2 API für maximale Sicherheit. Keine Passwort-Weitergabe nötig.</p>
+                    <h3>OAuth2 Sicherheit</h3>
+                    <p>Nutze die offizielle Discord & Roblox OAuth2 API. Keine Passwort-Weitergabe, maximale Sicherheit für deine Daten.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-bolt"></i>
                     </div>
-                    <h3>Blitzschnelle Verifizierung</h3>
-                    <p>Verifiziere dich in wenigen Sekunden. Automatisierte Rollenvergabe im Discord Server.</p>
+                    <h3>Blitzschnell</h3>
+                    <p>Verifiziere dich in unter 10 Sekunden. Automatisierte Rollenvergabe sofort nach der Verifizierung.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-cog"></i>
                     </div>
-                    <h3>Hochgradig anpassbar</h3>
-                    <p>Passe Verifizierungs-Einstellungen, Rollen und Berechtigungen nach deinen Wünschen an.</p>
+                    <h3>Volle Kontrolle</h3>
+                    <p>Passe Verifizierungs-Einstellungen, Rollen, Berechtigungen und Nachrichten nach deinen Wünschen an.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Detaillierte Statistiken</h3>
-                    <p>Behalte den Überblick über Verifizierungen, Member und Server-Aktivitäten.</p>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Behalte den Überblick über Verifizierungen, Member-Wachstum und Server-Aktivitäten in Echtzeit.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h3>Mobile Optimiert</h3>
-                    <p>Verifiziere dich problemlos von jedem Gerät - Desktop, Tablet oder Smartphone.</p>
+                    <h3>Mobile Ready</h3>
+                    <p>Verifiziere dich problemlos von jedem Gerät - Desktop, Tablet oder Smartphone. Responsive Design.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-headset"></i>
                     </div>
-                    <h3>24/7 Premium Support</h3>
-                    <p>Unser Support-Team ist rund um die Uhr für dich da und hilft bei allen Fragen.</p>
+                    <h3>24/7 Support</h3>
+                    <p>Unser Support-Team ist rund um die Uhr für dich da. Durchschnittliche Antwortzeit: unter 5 Minuten.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="features-container">
+            <div class="section-title">
+                <h2>So funktioniert's</h2>
+                <p>In 3 einfachen Schritten verifiziert</p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Mit Discord verbinden</h3>
+                        <p>Klicke auf "Mit Discord anmelden" und autorisiere RobloxAuth. Wir fragen nur die notwendigsten Berechtigungen ab (Nutzername & E-Mail).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Roblox Account verknüpfen</h3>
+                        <p>Gib deinen Roblox-Username ein oder verbinde dich direkt über Roblox OAuth. Wir überprüfen automatisch die Account-Informationen.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Fertig verifiziert</h3>
+                        <p>Erhalte automatisch deine verifizierte Rolle im Discord Server. Zugriff auf exklusive Channels und Features ist jetzt freigeschaltet!</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -765,24 +1077,62 @@
 
     <!-- CTA Section -->
     <section class="cta">
-        <h2>Bereit loszulegen?</h2>
-        <p>Schließe dich tausenden von Servern an und sichere deine Community mit professioneller Roblox-Verifizierung.</p>
-        <a href="#" class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;">
-            <i class="fab fa-discord"></i> Kostenlos starten
-        </a>
+        <div class="cta-content">
+            <h2>Bereit loszulegen?</h2>
+            <p>Schließe dich tausenden von Servern an und sichere deine Community mit professioneller Roblox-Verifizierung.</p>
+            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" style="font-size: 18px; padding: 18px 45px;" target="_blank">
+                <i class="fab fa-discord"></i> Kostenlos starten
+            </a>
+        </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-links">
-            <a href="#">Datenschutz</a>
-            <a href="#">AGB</a>
-            <a href="#">Impressum</a>
-            <a href="#">Kontakt</a>
-            <a href="#">API</a>
-            <a href="#">Status</a>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <div class="logo-icon"></div>
+                    RobloxAuth
+                </div>
+                <p>Die sicherste und schnellste Lösung zur Verifizierung von Roblox-Accounts in Discord Servern. Vertraut von über 1000 Communities weltweit.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Produkt</h4>
+                <ul>
+                    <li><a href="#">Funktionen</a></li>
+                    <li><a href="#">Preise</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">Integrationen</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ressourcen</h4>
+                <ul>
+                    <li><a href="#">Dokumentation</a></li>
+                    <li><a href="#">Anleitungen</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Rechtliches</h4>
+                <ul>
+                    <li><a href="#">Datenschutz</a></li>
+                    <li><a href="#">AGB</a></li>
+                    <li><a href="#">Impressum</a></li>
+                    <li><a href="#">Cookie-Einstellungen</a></li>
+                </ul>
+            </div>
         </div>
-        <p>&copy; 2026 RobloxVerify. Alle Rechte vorbehalten. Nicht verbunden mit Roblox Corporation oder Discord Inc.</p>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RobloxAuth. Alle Rechte vorbehalten. Nicht verbunden mit Roblox Corporation oder Discord Inc.</p>
+        </div>
     </footer>
 
     <script>
@@ -791,64 +1141,83 @@
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             const tabs = document.querySelectorAll('.tab');
+            const footerText = document.getElementById('formFooterText');
 
             if (tab === 'login') {
                 loginForm.classList.add('active');
                 registerForm.classList.remove('active');
                 tabs[0].classList.add('active');
                 tabs[1].classList.remove('active');
+                footerText.innerHTML = 'Noch kein Konto? <a href="#" onclick="switchTab(\'register\')">Jetzt registrieren</a>';
             } else {
                 loginForm.classList.remove('active');
                 registerForm.classList.add('active');
                 tabs[0].classList.remove('active');
                 tabs[1].classList.add('active');
+                footerText.innerHTML = 'Bereits ein Konto? <a href="#" onclick="switchTab(\'login\')">Hier anmelden</a>';
             }
+        }
+
+        // Handle Login
+        function handleLogin(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<span class="loading"></span> Wird angemeldet...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Erfolgreich!';
+                btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    btn.style.background = '';
+                    e.target.reset();
+                    alert('Login erfolgreich! (Demo)');
+                }, 1500);
+            }, 1500);
+        }
+
+        // Handle Register
+        function handleRegister(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<span class="loading"></span> Konto wird erstellt...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Konto erstellt!';
+                btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    btn.style.background = '';
+                    e.target.reset();
+                    alert('Registrierung erfolgreich! (Demo)');
+                }, 1500);
+            }, 1500);
         }
 
         // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
                 }
-            });
-        });
-
-        // Form Submission
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Animation
-                const btn = this.querySelector('button[type="submit"]');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bitte warten...';
-                btn.disabled = true;
-
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Erfolg!';
-                    btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
-                    
-                    setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        btn.style.background = '';
-                        this.reset();
-                    }, 2000);
-                }, 1500);
-            });
-        });
-
-        // Social Button Click
-        document.querySelectorAll('.social-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const platform = this.classList.contains('discord') ? 'Discord' : 'Roblox';
-                alert(`${platform} OAuth Verbindung wird hergestellt...`);
             });
         });
 
@@ -867,12 +1236,45 @@
             });
         }, observerOptions);
 
-        // Observe all feature cards
-        document.querySelectorAll('.feature-card').forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-            observer.observe(card);
+        // Observe all feature cards and steps
+        document.querySelectorAll('.feature-card, .step').forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(el);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(15, 15, 30, 0.95)';
+                nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.3)';
+            } else {
+                nav.style.background = 'rgba(15, 15, 30, 0.8)';
+                nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Check for OAuth callback
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                // Show success message
+                const card = document.querySelector('.verification-card');
+                card.innerHTML = `
+                    <div class="success-checkmark">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2 style="text-align: center; color: var(--primary-orange); margin-bottom: 20px;">Erfolgreich verbunden!</h2>
+                    <p style="text-align: center; color: var(--text-gray); margin-bottom: 30px;">Dein Discord-Account wurde erfolgreich mit RobloxAuth verknüpft.</p>
+                    <button class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;" onclick="window.location.href='/'">
+                        <i class="fas fa-home"></i> Zurück zur Startseite
+                    </button>
+                `;
+            }
         });
     </script>
 </body>
