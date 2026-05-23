@@ -16,6 +16,555 @@
         :root {
             --primary-orange: #FF6B35;
             --primary-red: #FF4500;
+            --dark-bg: #0f0f1e;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-color: rgba(255, 107, 53, 0.3);
+            --success: #00C853;
+            --error: #FF1744;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a0f0f 50%, #0f0f1e 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+        }
+
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .bg-animation .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-animation .gradient-orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            left: -200px;
+            top: -200px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 30px) scale(0.9); }
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 15, 30, 0.8);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout {
+            background: var(--error);
+            color: white;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 5%;
+        }
+
+        .welcome {
+            margin-bottom: 40px;
+        }
+
+        .welcome h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .card-header i {
+            color: var(--primary-orange);
+        }
+
+        .profile {
+            text-align: center;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--primary-orange);
+            margin-bottom: 20px;
+        }
+
+        .username {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .discriminator {
+            color: var(--text-gray);
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-label {
+            color: var(--text-gray);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 15px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(0, 200, 83, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(255, 23, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .api-section {
+            margin-top: 30px;
+        }
+
+        .api-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="gradient-orb"></div>
+    </div>
+
+    <nav>
+        <div class="logo" onclick="window.location.href='/'">
+            <div class="logo-icon"></div>
+            RobloxAuth
+        </div>
+        <button class="btn btn-logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </nav>
+
+    <div class="dashboard">
+        <div class="welcome">
+            <h1>Willkommen, <span id="welcomeName">User</span>! 👋</h1>
+            <p style="color: var(--text-gray);">Verwalte deine Account-Daten</p>
+        </div>
+
+        <div class="grid">
+            <!-- Discord Profil -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fab fa-discord"></i>
+                    Discord Profil
+                </div>
+                <div class="profile">
+                    <img id="avatar" class="avatar" src="" alt="Avatar">
+                    <div class="username" id="username">-</div>
+                    <div class="discriminator" id="discriminator">#0000</div>
+                    <div class="info-row">
+                        <span class="info-label">User ID</span>
+                        <span id="userId">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">E-Mail</span>
+                        <span id="email">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roblox Verifizierung -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-gamepad"></i>
+                    Roblox Verifizierung
+                </div>
+                
+                <div id="alertBox" class="alert"></div>
+
+                <div id="verifyStatus" style="text-align: center; padding: 20px; background: rgba(255,193,7,0.1); border: 1px solid #FFC107; border-radius: 12px; margin-bottom: 20px;">
+                    <i class="fas fa-clock" style="color: #FFC107; font-size: 32px; margin-bottom: 10px;"></i>
+                    <p>Nicht verifiziert</p>
+                </div>
+
+                <form id="robloxForm" onsubmit="verifyRoblox(event)">
+                    <div class="form-group">
+                        <label>Roblox Username</label>
+                        <input type="text" id="robloxUsername" placeholder="DeinRobloxName" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="verifyBtn">
+                        <i class="fas fa-check"></i> Verifizieren
+                    </button>
+                </form>
+
+                <div id="robloxInfo" class="hidden" style="margin-top: 20px;">
+                    <div class="info-row">
+                        <span class="info-label">Roblox ID</span>
+                        <span id="robloxId">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Display Name</span>
+                        <span id="robloxDisplay">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Section -->
+        <div class="card api-section">
+            <div class="card-header">
+                <i class="fas fa-code"></i>
+                Kite.onl API
+            </div>
+            <button class="btn-primary" onclick="sendKiteAPI()" style="margin-bottom: 15px;">
+                <i class="fas fa-paper-plane"></i> Daten an Kite.onl senden
+            </button>
+            <div class="api-box" id="apiResponse">
+                Klicke auf den Button um Daten zu senden...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Konfiguration
+        const KITE_API_URL = 'https://kite.onl/apps/73tkkpprdecby2f8/events/mhgtpkd9a99h0cox';
+        let userData = null;
+
+        // Beim Laden
+        window.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+        });
+
+        function loadUserData() {
+            // Prüfen ob User-Daten im localStorage
+            const stored = localStorage.getItem('robloxauth_user');
+            
+            if (stored) {
+                userData = JSON.parse(stored);
+                displayUserData();
+            } else {
+                // Keine Daten - zur Homepage
+                window.location.href = '/';
+            }
+        }
+
+        function displayUserData() {
+            if (!userData || !userData.discord) return;
+
+            const d = userData.discord;
+            
+            document.getElementById('welcomeName').textContent = d.username;
+            document.getElementById('username').textContent = d.username;
+            document.getElementById('discriminator').textContent = '#' + d.discriminator;
+            document.getElementById('userId').textContent = d.id;
+            document.getElementById('email').textContent = d.email || 'Nicht öffentlich';
+            
+            // Avatar
+            const avatarUrl = d.avatar ? 
+                `https://cdn.discordapp.com/avatars/${d.id}/${d.avatar}.png` :
+                `https://cdn.discordapp.com/embed/avatars/${parseInt(d.discriminator) % 5}.png`;
+            document.getElementById('avatar').src = avatarUrl;
+
+            // Roblox Daten falls vorhanden
+            if (userData.roblox && userData.verified) {
+                showVerifiedStatus();
+            }
+        }
+
+        function showVerifiedStatus() {
+            const statusDiv = document.getElementById('verifyStatus');
+            statusDiv.style.background = 'rgba(0,200,83,0.1)';
+            statusDiv.style.borderColor = 'var(--success)';
+            statusDiv.innerHTML = `
+                <i class="fas fa-check-circle" style="color: var(--success); font-size: 32px; margin-bottom: 10px;"></i>
+                <p style="color: var(--success); font-weight: 600;">Verifiziert</p>
+            `;
+
+            document.getElementById('robloxInfo').classList.remove('hidden');
+            document.getElementById('robloxId').textContent = userData.roblox.id;
+            document.getElementById('robloxDisplay').textContent = userData.roblox.displayName;
+        }
+
+        async function verifyRoblox(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('robloxUsername').value.trim();
+            const btn = document.getElementById('verifyBtn');
+            const originalContent = btn.innerHTML;
+
+            btn.innerHTML = '<span class="loading"></span> Wird überprüft...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('https://users.roblox.com/v1/usernames/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usernames: [username],
+                        excludeBannedUsers: true
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.data && data.data.length > 0) {
+                    const robloxUser = data.data[0];
+                    
+                    userData.roblox = {
+                        id: robloxUser.id,
+                        username: robloxUser.name,
+                        displayName: robloxUser.displayName
+                    };
+                    userData.verified = true;
+                    localStorage.setItem('robloxauth_user', JSON.stringify(userData));
+
+                    showAlert('Erfolgreich verifiziert!', 'success');
+                    showVerifiedStatus();
+                    
+                    // Automatisch an Kite senden
+                    setTimeout(() => sendKiteAPI(), 500);
+                } else {
+                    showAlert('Account nicht gefunden!', 'error');
+                }
+            } catch (error) {
+                showAlert('Fehler bei der Verifizierung', 'error');
+                console.error(error);
+            }
+
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+        }
+
+        async function sendKiteAPI() {
+            const responseDiv = document.getElementById('apiResponse');
+            responseDiv.textContent = 'Sende Anfrage...';
+
+            const payload = {
+                discord_id: userData.discord.id,
+                discord_username: userData.discord.username,
+                roblox_username: userData.roblox ? userData.roblox.username : null,
+                roblox_id: userData.roblox ? userData.roblox.id : null,
+                verified: userData.verified || false,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(KITE_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                responseDiv.innerHTML = `<span style="color: var(--success)">✓ Erfolg!</span>\n\n${JSON.stringify(result, null, 2)}`;
+                showAlert('Daten an Kite.onl gesendet!', 'success');
+            } catch (error) {
+                responseDiv.innerHTML = `<span style="color: var(--error)">✗ Fehler</span>\n\n${error.message}`;
+                showAlert('Fehler beim Senden', 'error');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertBox');
+            alert.textContent = message;
+            alert.className = `alert show alert-${type}`;
+            setTimeout(() => alert.classList.remove('show'), 3000);
+        }
+
+        function logout() {
+            localStorage.removeItem('robloxauth_user');
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RobloxAuth - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary-orange: #FF6B35;
+            --primary-red: #FF4500;
             --secondary-red: #FF2D00;
             --accent-yellow: #FFA500;
             --dark-bg: #0f0f1e;
