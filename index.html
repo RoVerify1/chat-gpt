@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RobloxAuth - Discord Verifizierung</title>
+    <title>RobloxAuth - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -24,6 +23,9 @@
             --text-light: #ffffff;
             --text-gray: #a0a0b0;
             --border-color: rgba(255, 107, 53, 0.3);
+            --success: #00C853;
+            --warning: #FFC107;
+            --error: #FF1744;
         }
 
         body {
@@ -33,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* Animated Background */
+        /* Background Animation */
         .bg-animation {
             position: fixed;
             width: 100%;
@@ -41,14 +43,13 @@
             top: 0;
             left: 0;
             z-index: -1;
-            overflow: hidden;
         }
 
         .bg-animation .gradient-orb {
             position: absolute;
             border-radius: 50%;
             filter: blur(80px);
-            opacity: 0.4;
+            opacity: 0.3;
             animation: float 20s infinite ease-in-out;
         }
 
@@ -58,7 +59,6 @@
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
             left: -200px;
             top: -200px;
-            animation-delay: 0s;
         }
 
         .bg-animation .gradient-orb:nth-child(2) {
@@ -68,15 +68,6 @@
             right: -150px;
             top: 20%;
             animation-delay: 5s;
-        }
-
-        .bg-animation .gradient-orb:nth-child(3) {
-            width: 450px;
-            height: 450px;
-            background: linear-gradient(135deg, var(--primary-red), var(--primary-orange));
-            bottom: -150px;
-            left: 30%;
-            animation-delay: 10s;
         }
 
         @keyframes float {
@@ -93,37 +84,33 @@
             padding: 20px 5%;
             backdrop-filter: blur(20px);
             background: rgba(15, 15, 30, 0.8);
-            position: fixed;
-            width: 100%;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid var(--border-color);
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             cursor: pointer;
         }
 
         .logo-icon {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
         }
 
         .logo-icon::before {
@@ -133,51 +120,33 @@
             height: 60%;
             background: white;
             border-radius: 4px;
-            opacity: 0.9;
         }
 
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            width: 30%;
-            height: 30%;
-            background: var(--primary-red);
-            border-radius: 50%;
-            bottom: 8px;
-            right: 8px;
-        }
-
-        .nav-links {
+        .nav-user {
             display: flex;
-            gap: 35px;
             align-items: center;
+            gap: 15px;
         }
 
-        .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: all 0.3s;
-            font-weight: 500;
-            font-size: 15px;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-orange);
-            transform: translateY(-2px);
+        .nav-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-orange);
         }
 
         .btn {
-            padding: 12px 28px;
+            padding: 10px 24px;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-size: 15px;
+            gap: 8px;
+            font-size: 14px;
         }
 
         .btn-primary {
@@ -187,235 +156,257 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.6);
         }
 
         .btn-secondary {
             background: transparent;
-            color: var(--primary-orange);
-            border: 2px solid var(--primary-orange);
+            color: var(--text-light);
+            border: 2px solid var(--border-color);
         }
 
         .btn-secondary:hover {
-            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .btn-logout {
+            background: var(--error);
             color: white;
         }
 
-        .btn-discord {
-            background: #5865F2;
+        /* Main Container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 5%;
+        }
+
+        .welcome-section {
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-section p {
+            color: var(--text-gray);
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-orange);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
             color: white;
-            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
         }
 
-        .btn-discord:hover {
-            background: #4752C4;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(88, 101, 242, 0.6);
+        .stat-info h3 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            color: var(--primary-orange);
         }
 
-        /* Hero Section */
-        .hero {
-            margin-top: 100px;
-            padding: 80px 5%;
+        .stat-info p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        /* Content Grid */
+        .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+            gap: 30px;
+            margin-bottom: 30px;
         }
 
-        .hero-content h1 {
-            font-size: 56px;
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 25px;
-            background: linear-gradient(135deg, #fff 0%, var(--primary-orange) 50%, var(--primary-red) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-            font-weight: 800;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .hero-content p {
-            font-size: 20px;
-            color: var(--text-gray);
-            margin-bottom: 40px;
-            line-height: 1.7;
-        }
-
-        .hero-buttons {
+        .card-title {
             display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 40px;
-            margin-top: 50px;
-            padding-top: 40px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .hero-stat h3 {
-            font-size: 32px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-        }
-
-        .hero-stat p {
-            color: var(--text-gray);
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .hero-image {
-            position: relative;
-            display: flex;
-            justify-content: center;
             align-items: center;
-        }
-
-        .verification-card {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(255, 69, 0, 0.15));
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 107, 53, 0.4);
-            border-radius: 30px;
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 25px 80px rgba(255, 107, 53, 0.3), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            animation: cardFloat 6s infinite ease-in-out;
-        }
-
-        @keyframes cardFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .verification-card h2 {
-            text-align: center;
-            margin-bottom: 35px;
-            color: var(--primary-orange);
-            font-size: 28px;
+            gap: 12px;
+            font-size: 22px;
             font-weight: 700;
         }
 
-        .tab-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 35px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 5px;
-            border-radius: 15px;
+        .card-title i {
+            color: var(--primary-orange);
         }
 
-        .tab {
-            flex: 1;
-            padding: 14px;
-            background: transparent;
-            border: none;
-            border-radius: 12px;
-            color: var(--text-gray);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .oauth-buttons {
+        /* Discord Profile */
+        .profile-section {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
+            align-items: center;
+            text-align: center;
         }
 
-        .oauth-btn {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-weight: 600;
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--primary-orange);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .profile-discriminator {
+            color: var(--text-gray);
             font-size: 16px;
-            text-decoration: none;
+            margin-bottom: 20px;
         }
 
-        .oauth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .oauth-btn.discord {
-            background: linear-gradient(135deg, #5865F2, #4752C4);
-            border-color: #5865F2;
-        }
-
-        .oauth-btn.roblox {
-            background: linear-gradient(135deg, #000000, #1a1a1a);
-            border-color: var(--primary-orange);
-        }
-
-        .oauth-btn:hover.discord {
-            background: linear-gradient(135deg, #4752C4, #3a45a8);
-        }
-
-        .oauth-btn:hover.roblox {
-            border-color: var(--primary-red);
-            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
-        }
-
-        .divider {
-            display: flex;
+        .profile-badge {
+            display: inline-flex;
             align-items: center;
-            margin: 25px 0;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(88, 101, 242, 0.2);
+            border: 1px solid #5865F2;
+            border-radius: 20px;
+            color: #5865F2;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .profile-info {
+            width: 100%;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
             color: var(--text-gray);
             font-size: 14px;
         }
 
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border-color);
+        .info-value {
+            font-weight: 600;
+            color: var(--text-light);
         }
 
-        .divider span {
-            padding: 0 15px;
+        /* Roblox Verification */
+        .verification-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background: rgba(0, 200, 83, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        .verification-status.pending {
+            background: rgba(255, 193, 7, 0.1);
+            border-color: var(--warning);
+        }
+
+        .verification-status.verified {
+            background: rgba(0, 200, 83, 0.1);
+            border-color: var(--success);
+        }
+
+        .status-icon {
+            font-size: 24px;
+        }
+
+        .verification-status.verified .status-icon {
+            color: var(--success);
+        }
+
+        .verification-status.pending .status-icon {
+            color: var(--warning);
+        }
+
+        .status-text {
+            flex: 1;
+        }
+
+        .status-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .status-desc {
+            font-size: 13px;
+            color: var(--text-gray);
         }
 
         .form-group {
@@ -425,17 +416,17 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: var(--text-light);
-            font-weight: 500;
+            color: var(--text-gray);
             font-size: 14px;
+            font-weight: 500;
         }
 
         .form-group input {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             border: 2px solid var(--border-color);
             border-radius: 12px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             color: white;
             font-size: 15px;
             transition: all 0.3s;
@@ -447,385 +438,39 @@
             box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
         }
 
-        .form-group input::placeholder {
-            color: var(--text-gray);
+        .api-section {
+            margin-top: 30px;
         }
 
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-top: 2px;
-            accent-color: var(--primary-orange);
-            cursor: pointer;
-        }
-
-        .checkbox-group label {
-            color: var(--text-gray);
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .checkbox-group a {
-            color: var(--primary-orange);
-            text-decoration: none;
-        }
-
-        .checkbox-group a:hover {
-            text-decoration: underline;
-        }
-
-        .form-footer {
-            text-align: center;
-            color: var(--text-gray);
-            margin-top: 25px;
-            font-size: 14px;
-        }
-
-        .form-footer a {
-            color: var(--primary-orange);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 120px 5%;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .features-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 70px;
-        }
-
-        .section-title h2 {
-            font-size: 48px;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #fff, var(--primary-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
-        }
-
-        .section-title p {
-            color: var(--text-gray);
-            font-size: 18px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 40px 35px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-orange), var(--primary-red));
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-orange);
-            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.2);
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 25px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: white;
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: var(--primary-orange);
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            color: var(--text-gray);
-            line-height: 1.7;
-            font-size: 15px;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            padding: 120px 5%;
-        }
-
-        .steps-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .step {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 35px;
-            transition: all 0.3s;
-        }
-
-        .step:hover {
-            transform: translateX(10px);
-            border-color: var(--primary-orange);
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 800;
-            color: white;
-            flex-shrink: 0;
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
-        }
-
-        .step-content h3 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            color: var(--primary-orange);
-        }
-
-        .step-content p {
-            color: var(--text-gray);
-            line-height: 1.6;
-        }
-
-        /* CTA Section */
-        .cta {
-            padding: 120px 5%;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 69, 0, 0.1));
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
-            animation: pulse 4s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .cta-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta h2 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff, var(--primary-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
-        }
-
-        .cta p {
-            color: var(--text-gray);
-            font-size: 20px;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 60px 5% 30px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 40px;
-        }
-
-        .footer-brand .logo {
-            margin-bottom: 15px;
-        }
-
-        .footer-brand p {
-            color: var(--text-gray);
-            line-height: 1.7;
-            font-size: 14px;
-        }
-
-        .footer-links h4 {
-            color: var(--text-light);
-            margin-bottom: 20px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: var(--text-gray);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 14px;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-orange);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-gray);
-            font-size: 14px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+        .api-endpoint {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-light);
-            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--accent-yellow);
+            margin-bottom: 15px;
+            border-left: 3px solid var(--primary-orange);
         }
 
-        .social-links a:hover {
-            background: var(--primary-orange);
-            border-color: var(--primary-orange);
-            transform: translateY(-3px);
+        .api-response {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
         }
 
-        /* Responsive */
-        @media (max-width: 968px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 60px;
-            }
-
-            .hero-content h1 {
-                font-size: 42px;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .hero-stats {
-                justify-content: center;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .step {
-                flex-direction: column;
-                text-align: center;
-            }
+        .api-response pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: var(--text-gray);
         }
 
-        /* Loading Animation */
         .loading {
             display: inline-block;
             width: 20px;
@@ -840,24 +485,35 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Success Animation */
-        .success-checkmark {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #00C853, #00E676);
-            border-radius: 50%;
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: white;
-            animation: scaleIn 0.5s;
+            gap: 12px;
         }
 
-        @keyframes scaleIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
+        .alert-success {
+            background: rgba(0, 200, 83, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(255, 23, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -866,416 +522,469 @@
     <div class="bg-animation">
         <div class="gradient-orb"></div>
         <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
     </div>
 
     <!-- Navigation -->
     <nav>
-        <div class="logo" onclick="window.scrollTo(0,0)">
+        <div class="logo" onclick="window.location.href='/'">
             <div class="logo-icon"></div>
             RobloxAuth
         </div>
-        <div class="nav-links">
-            <a href="#home">Startseite</a>
-            <a href="#features">Funktionen</a>
-            <a href="#how-it-works">So funktioniert's</a>
-            <a href="#support">Support</a>
-            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" target="_blank">
-                <i class="fab fa-discord"></i> Discord Login
-            </a>
+        <div class="nav-user">
+            <img id="userAvatar" src="" alt="User Avatar">
+            <button class="btn btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Sichere Discord Verifizierung für Roblox</h1>
-            <p>Verbinde deinen Roblox-Account sicher mit Discord. Automatisierte Rollenvergabe, OAuth2-Sicherheit und blitzschnelle Verifizierung für deine Community.</p>
-            <div class="hero-buttons">
-                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" target="_blank">
-                    <i class="fab fa-discord"></i> Mit Discord starten
-                </a>
-                <a href="#how-it-works" class="btn btn-secondary">
-                    <i class="fas fa-play"></i> Anleitung
-                </a>
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Willkommen zurück, <span id="welcomeName">User</span>! 👋</h1>
+            <p>Hier kannst du deine Account-Daten verwalten und deinen Roblox-Account verifizieren.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="verificationStatus">Pending</h3>
+                    <p>Verifizierungs-Status</p>
+                </div>
             </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <h3>50K+</h3>
-                    <p>Verifizierte User</p>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-server"></i>
                 </div>
-                <div class="hero-stat">
-                    <h3>1000+</h3>
-                    <p>Discord Server</p>
+                <div class="stat-info">
+                    <h3 id="serverCount">0</h3>
+                    <p>Verbundene Server</p>
                 </div>
-                <div class="hero-stat">
-                    <h3>99.9%</h3>
-                    <p>Uptime</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="memberSince">2026</h3>
+                    <p>Mitglied seit</p>
                 </div>
             </div>
         </div>
 
-        <div class="hero-image">
-            <div class="verification-card">
-                <h2><i class="fas fa-shield-alt"></i> Verifizierung</h2>
-                
-                <div class="tab-container">
-                    <button class="tab active" onclick="switchTab('login')">Login</button>
-                    <button class="tab" onclick="switchTab('register')">Registrieren</button>
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Discord Profile Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fab fa-discord"></i>
+                        Discord Profil
+                    </div>
                 </div>
-
-                <!-- Login Form -->
-                <div id="loginForm" class="form-section active">
-                    <div class="oauth-buttons">
-                        <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="oauth-btn discord" target="_blank">
-                            <i class="fab fa-discord"></i>
-                            Mit Discord anmelden
-                        </a>
-                        <button class="oauth-btn roblox" onclick="alert('Roblox OAuth wird vorbereitet...')">
-                            <i class="fas fa-gamepad"></i>
-                            Mit Roblox anmelden
-                        </button>
+                <div class="profile-section">
+                    <img id="profileAvatar" class="profile-avatar" src="" alt="Profile">
+                    <div class="profile-name" id="profileName">Username</div>
+                    <div class="profile-discriminator" id="profileDiscriminator">#0000</div>
+                    <div class="profile-badge">
+                        <i class="fab fa-discord"></i>
+                        Discord Account
                     </div>
                     
-                    <div class="divider">
-                        <span>oder mit E-Mail</span>
+                    <div class="profile-info">
+                        <div class="info-row">
+                            <span class="info-label">User ID</span>
+                            <span class="info-value" id="userId">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">E-Mail</span>
+                            <span class="info-value" id="userEmail">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Account erstellt</span>
+                            <span class="info-value" id="accountCreated">-</span>
+                        </div>
                     </div>
-
-                    <form onsubmit="handleLogin(event)">
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
-                            <input type="email" placeholder="deine@email.de" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Passwort</label>
-                            <input type="password" placeholder="••••••••" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
-                            <i class="fas fa-sign-in-alt"></i> Anmelden
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Register Form -->
-                <div id="registerForm" class="form-section">
-                    <form onsubmit="handleRegister(event)">
-                        <div class="form-group">
-                            <label><i class="fas fa-user"></i> Roblox Username</label>
-                            <input type="text" placeholder="DeinRobloxName" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
-                            <input type="email" placeholder="deine@email.de" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Passwort</label>
-                            <input type="password" placeholder="Mindestens 8 Zeichen" required>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="terms" required>
-                            <label for="terms">Ich akzeptiere die <a href="#">AGB</a> und <a href="#">Datenschutzerklärung</a></label>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
-                            <i class="fas fa-user-plus"></i> Konto erstellen
-                        </button>
-                    </form>
-                </div>
-
-                <div class="form-footer">
-                    <p id="formFooterText">Noch kein Konto? <a href="#" onclick="switchTab('register')">Jetzt registrieren</a></p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="features-container">
-            <div class="section-title">
-                <h2>Warum RobloxAuth?</h2>
-                <p>Die professionellste Lösung für deine Roblox-Discord Community</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
+            <!-- Roblox Verification Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-gamepad"></i>
+                        Roblox Verifizierung
                     </div>
-                    <h3>OAuth2 Sicherheit</h3>
-                    <p>Nutze die offizielle Discord & Roblox OAuth2 API. Keine Passwort-Weitergabe, maximale Sicherheit für deine Daten.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Blitzschnell</h3>
-                    <p>Verifiziere dich in unter 10 Sekunden. Automatisierte Rollenvergabe sofort nach der Verifizierung.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                    <h3>Volle Kontrolle</h3>
-                    <p>Passe Verifizierungs-Einstellungen, Rollen, Berechtigungen und Nachrichten nach deinen Wünschen an.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Analytics Dashboard</h3>
-                    <p>Behalte den Überblick über Verifizierungen, Member-Wachstum und Server-Aktivitäten in Echtzeit.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Mobile Ready</h3>
-                    <p>Verifiziere dich problemlos von jedem Gerät - Desktop, Tablet oder Smartphone. Responsive Design.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>24/7 Support</h3>
-                    <p>Unser Support-Team ist rund um die Uhr für dich da. Durchschnittliche Antwortzeit: unter 5 Minuten.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="features-container">
-            <div class="section-title">
-                <h2>So funktioniert's</h2>
-                <p>In 3 einfachen Schritten verifiziert</p>
-            </div>
-            <div class="steps-container">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>Mit Discord verbinden</h3>
-                        <p>Klicke auf "Mit Discord anmelden" und autorisiere RobloxAuth. Wir fragen nur die notwendigsten Berechtigungen ab (Nutzername & E-Mail).</p>
+                <div id="verificationAlert"></div>
+
+                <div class="verification-status" id="verificationBadge">
+                    <i class="fas fa-clock status-icon"></i>
+                    <div class="status-text">
+                        <div class="status-title">Nicht verifiziert</div>
+                        <div class="status-desc">Verifiziere deinen Roblox-Account</div>
                     </div>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>Roblox Account verknüpfen</h3>
-                        <p>Gib deinen Roblox-Username ein oder verbinde dich direkt über Roblox OAuth. Wir überprüfen automatisch die Account-Informationen.</p>
+
+                <form id="robloxForm" onsubmit="verifyRoblox(event)">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-user"></i> Roblox Username
+                        </label>
+                        <input 
+                            type="text" 
+                            id="robloxUsername" 
+                            placeholder="DeinRobloxName" 
+                            required
+                        >
                     </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>Fertig verifiziert</h3>
-                        <p>Erhalte automatisch deine verifizierte Rolle im Discord Server. Zugriff auf exklusive Channels und Features ist jetzt freigeschaltet!</p>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; justify-content: center;">
+                        <i class="fas fa-check"></i> Verifizieren
+                    </button>
+                </form>
+
+                <div id="robloxProfile" style="margin-top: 25px; display: none;">
+                    <div class="info-row">
+                        <span class="info-label">Roblox ID</span>
+                        <span class="info-value" id="robloxId">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Display Name</span>
+                        <span class="info-value" id="robloxDisplayName">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Verifiziert am</span>
+                        <span class="info-value" id="verifiedAt">-</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="cta-content">
-            <h2>Bereit loszulegen?</h2>
-            <p>Schließe dich tausenden von Servern an und sichere deine Community mit professioneller Roblox-Verifizierung.</p>
-            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" style="font-size: 18px; padding: 18px 45px;" target="_blank">
-                <i class="fab fa-discord"></i> Kostenlos starten
-            </a>
-        </div>
-    </section>
+        <!-- API Section -->
+        <div class="card api-section">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-code"></i>
+                    API Integration (Kite.onl)
+                </div>
+                <button class="btn btn-secondary" onclick="sendToKiteAPI()">
+                    <i class="fas fa-paper-plane"></i> Test Request senden
+                </button>
+            </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-brand">
-                <div class="logo">
-                    <div class="logo-icon"></div>
-                    RobloxAuth
+            <div class="api-endpoint">
+                POST https://kite.onl/apps/73tkkpprdecby2f8/events/mhgtpkd9a99h0cox
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="color: var(--text-gray); font-size: 14px; margin-bottom: 10px; display: block;">
+                    API Request Body:
+                </label>
+                <div class="api-response">
+                    <pre id="apiRequestBody">{
+  "discord_id": "<span id="apiDiscordId\">-</span>",
+  "discord_username": "<span id="apiDiscordUsername\">-</span>",
+  "roblox_username": "<span id="apiRobloxUsername\">Nicht verifiziert</span>",
+  "verified": false,
+  "timestamp": "<span id="apiTimestamp\">-</span>"
+}</pre>
                 </div>
-                <p>Die sicherste und schnellste Lösung zur Verifizierung von Roblox-Accounts in Discord Servern. Vertraut von über 1000 Communities weltweit.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-discord"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+
+            <div>
+                <label style="color: var(--text-gray); font-size: 14px; margin-bottom: 10px; display: block;">
+                    API Response:
+                </label>
+                <div class="api-response">
+                    <pre id="apiResponse">Klicke auf "Test Request senden" um eine API-Anfrage zu stellen...</pre>
                 </div>
-            </div>
-            <div class="footer-links">
-                <h4>Produkt</h4>
-                <ul>
-                    <li><a href="#">Funktionen</a></li>
-                    <li><a href="#">Preise</a></li>
-                    <li><a href="#">API</a></li>
-                    <li><a href="#">Integrationen</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h4>Ressourcen</h4>
-                <ul>
-                    <li><a href="#">Dokumentation</a></li>
-                    <li><a href="#">Anleitungen</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Community</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h4>Rechtliches</h4>
-                <ul>
-                    <li><a href="#">Datenschutz</a></li>
-                    <li><a href="#">AGB</a></li>
-                    <li><a href="#">Impressum</a></li>
-                    <li><a href="#">Cookie-Einstellungen</a></li>
-                </ul>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 RobloxAuth. Alle Rechte vorbehalten. Nicht verbunden mit Roblox Corporation oder Discord Inc.</p>
-        </div>
-    </footer>
+    </div>
 
     <script>
-        // Tab Switching
-        function switchTab(tab) {
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const tabs = document.querySelectorAll('.tab');
-            const footerText = document.getElementById('formFooterText');
-
-            if (tab === 'login') {
-                loginForm.classList.add('active');
-                registerForm.classList.remove('active');
-                tabs[0].classList.add('active');
-                tabs[1].classList.remove('active');
-                footerText.innerHTML = 'Noch kein Konto? <a href="#" onclick="switchTab(\'register\')">Jetzt registrieren</a>';
-            } else {
-                loginForm.classList.remove('active');
-                registerForm.classList.add('active');
-                tabs[0].classList.remove('active');
-                tabs[1].classList.add('active');
-                footerText.innerHTML = 'Bereits ein Konto? <a href="#" onclick="switchTab(\'login\')">Hier anmelden</a>';
-            }
-        }
-
-        // Handle Login
-        function handleLogin(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalContent = btn.innerHTML;
-            
-            btn.innerHTML = '<span class="loading"></span> Wird angemeldet...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-check"></i> Erfolgreich!';
-                btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
-                    btn.style.background = '';
-                    e.target.reset();
-                    alert('Login erfolgreich! (Demo)');
-                }, 1500);
-            }, 1500);
-        }
-
-        // Handle Register
-        function handleRegister(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalContent = btn.innerHTML;
-            
-            btn.innerHTML = '<span class="loading"></span> Konto wird erstellt...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-check"></i> Konto erstellt!';
-                btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
-                    btn.style.background = '';
-                    e.target.reset();
-                    alert('Registrierung erfolgreich! (Demo)');
-                }, 1500);
-            }, 1500);
-        }
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#') {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                }
-            });
-        });
-
-        // Scroll Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
+        // User Data (wird nach Login gefüllt)
+        let userData = {
+            discord: null,
+            roblox: null,
+            verified: false
         };
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+        // Kite.onl API Configuration
+        const KITE_API_URL = 'https://kite.onl/apps/73tkkpprdecby2f8/events/mhgtpkd9a99h0cox';
 
-        // Observe all feature cards and steps
-        document.querySelectorAll('.feature-card, .step').forEach((el, index) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = `all 0.6s ease ${index * 0.1}s`;
-            observer.observe(el);
-        });
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.style.background = 'rgba(15, 15, 30, 0.95)';
-                nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.3)';
-            } else {
-                nav.style.background = 'rgba(15, 15, 30, 0.8)';
-                nav.style.boxShadow = 'none';
-            }
-        });
-
-        // Check for OAuth callback
+        // Check if user is logged in
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             
             if (code) {
-                // Show success message
-                const card = document.querySelector('.verification-card');
-                card.innerHTML = `
-                    <div class="success-checkmark">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <h2 style="text-align: center; color: var(--primary-orange); margin-bottom: 20px;">Erfolgreich verbunden!</h2>
-                    <p style="text-align: center; color: var(--text-gray); margin-bottom: 30px;">Dein Discord-Account wurde erfolgreich mit RobloxAuth verknüpft.</p>
-                    <button class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;" onclick="window.location.href='/'">
-                        <i class="fas fa-home"></i> Zurück zur Startseite
-                    </button>
-                `;
+                // Exchange code for token (in production, do this server-side!)
+                handleDiscordCallback(code);
+            } else {
+                // Check for stored user data
+                const storedData = localStorage.getItem('robloxauth_user');
+                if (storedData) {
+                    userData = JSON.parse(storedData);
+                    loadDashboard();
+                } else {
+                    // Redirect to login
+                    window.location.href = '/';
+                }
             }
         });
+
+        // Handle Discord OAuth Callback
+        async function handleDiscordCallback(code) {
+            try {
+                // In production, exchange code for token on your server
+                // For demo, we'll simulate the user data
+                
+                // Fetch user data from Discord API
+                const response = await fetch('https://discord.com/api/users/@me', {
+                    headers: {
+                        'Authorization': `Bearer ${code}` // In production, use access token
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    saveUserData(userData);
+                    loadDashboard();
+                } else {
+                    // Demo mode - simulate user data
+                    simulateUserData();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                simulateUserData();
+            }
+        }
+
+        // Simulate user data for demo
+        function simulateUserData() {
+            userData = {
+                discord: {
+                    id: '123456789012345678',
+                    username: 'RobloxPlayer',
+                    discriminator: '1234',
+                    avatar: 'https://cdn.discordapp.com/embed/avatars/0.png',
+                    email: 'user@example.com',
+                    created_at: '2024-01-01T00:00:00.000Z'
+                },
+                roblox: null,
+                verified: false
+            };
+            localStorage.setItem('robloxauth_user', JSON.stringify(userData));
+            loadDashboard();
+        }
+
+        // Save user data
+        function saveUserData(discordData) {
+            userData.discord = discordData;
+            localStorage.setItem('robloxauth_user', JSON.stringify(userData));
+        }
+
+        // Load Dashboard
+        function loadDashboard() {
+            if (!userData.discord) return;
+
+            // Update Discord Profile
+            document.getElementById('userAvatar').src = userData.discord.avatar ? 
+                `https://cdn.discordapp.com/avatars/${userData.discord.id}/${userData.discord.avatar}.png` : 
+                `https://cdn.discordapp.com/embed/avatars/${userData.discord.discriminator % 5}.png`;
+            
+            document.getElementById('profileAvatar').src = document.getElementById('userAvatar').src;
+            document.getElementById('profileName').textContent = userData.discord.username;
+            document.getElementById('profileDiscriminator').textContent = `#${userData.discord.discriminator}`;
+            document.getElementById('welcomeName').textContent = userData.discord.username;
+            document.getElementById('userId').textContent = userData.discord.id;
+            document.getElementById('userEmail').textContent = userData.discord.email || 'Nicht öffentlich';
+            document.getElementById('accountCreated').textContent = new Date(userData.discord.created_at).toLocaleDateString('de-DE');
+
+            // Update API Request Body
+            document.getElementById('apiDiscordId').textContent = userData.discord.id;
+            document.getElementById('apiDiscordUsername').textContent = userData.discord.username;
+            document.getElementById('apiTimestamp').textContent = new Date().toISOString();
+
+            // Load Roblox data if exists
+            if (userData.roblox) {
+                loadRobloxData();
+            }
+        }
+
+        // Verify Roblox Account
+        async function verifyRoblox(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('robloxUsername').value.trim();
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalBtnContent = submitBtn.innerHTML;
+
+            submitBtn.innerHTML = '<span class="loading"></span> Wird überprüft...';
+            submitBtn.disabled = true;
+
+            try {
+                // Fetch Roblox user data
+                const response = await fetch(`https://users.roblox.com/v1/usernames/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        usernames: [username],
+                        excludeBannedUsers: true
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.data && data.data.length > 0) {
+                        const robloxUser = data.data[0];
+                        
+                        // Save Roblox data
+                        userData.roblox = {
+                            id: robloxUser.id,
+                            username: robloxUser.name,
+                            displayName: robloxUser.displayName,
+                            verified_at: new Date().toISOString()
+                        };
+                        userData.verified = true;
+                        localStorage.setItem('robloxauth_user', JSON.stringify(userData));
+
+                        // Send to Kite.onl API
+                        await sendToKiteAPI();
+
+                        showVerificationAlert('success', 'Erfolgreich verifiziert! Dein Roblox-Account wurde verknüpft.');
+                        loadRobloxData();
+                    } else {
+                        showVerificationAlert('error', 'Roblox-Account nicht gefunden. Bitte überprüfe den Username.');
+                    }
+                } else {
+                    showVerificationAlert('error', 'Fehler bei der Verifizierung. Bitte versuche es erneut.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showVerificationAlert('error', 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+            }
+
+            submitBtn.innerHTML = originalBtnContent;
+            submitBtn.disabled = false;
+        }
+
+        // Load Roblox Data
+        function loadRobloxData() {
+            if (!userData.roblox) return;
+
+            document.getElementById('verificationBadge').className = 'verification-status verified';
+            document.getElementById('verificationBadge').innerHTML = `
+                <i class="fas fa-check-circle status-icon"></i>
+                <div class="status-text">
+                    <div class="status-title">Verifiziert</div>
+                    <div class="status-desc">Dein Roblox-Account ist verknüpft</div>
+                </div>
+            `;
+
+            document.getElementById('verificationStatus').textContent = 'Verifiziert';
+            document.getElementById('verificationStatus').style.color = 'var(--success)';
+
+            document.getElementById('robloxProfile').style.display = 'block';
+            document.getElementById('robloxId').textContent = userData.roblox.id;
+            document.getElementById('robloxDisplayName').textContent = userData.roblox.displayName;
+            document.getElementById('verifiedAt').textContent = new Date(userData.roblox.verified_at).toLocaleDateString('de-DE');
+
+            // Update API Request Body
+            document.getElementById('apiRobloxUsername').textContent = userData.roblox.username;
+            updateAPIRequestBody();
+        }
+
+        // Show Verification Alert
+        function showVerificationAlert(type, message) {
+            const alertDiv = document.getElementById('verificationAlert');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            alertDiv.className = `alert ${alertClass}`;
+            alertDiv.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            setTimeout(() => {
+                alertDiv.innerHTML = '';
+                alertDiv.className = '';
+            }, 5000);
+        }
+
+        // Send to Kite.onl API
+        async function sendToKiteAPI() {
+            const responseDiv = document.getElementById('apiResponse');
+            responseDiv.textContent = 'Sende Anfrage...';
+
+            const payload = {
+                discord_id: userData.discord.id,
+                discord_username: userData.discord.username,
+                discord_email: userData.discord.email || null,
+                roblox_username: userData.roblox ? userData.roblox.username : null,
+                roblox_id: userData.roblox ? userData.roblox.id : null,
+                verified: userData.verified,
+                timestamp: new Date().toISOString(),
+                event_type: 'user_verification'
+            };
+
+            try {
+                const response = await fetch(KITE_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    responseDiv.innerHTML = `<span style="color: var(--success);">// Erfolg! Status: ${response.status}</span>\n${JSON.stringify(data, null, 2)}`;
+                    showVerificationAlert('success', 'Daten erfolgreich an Kite.onl gesendet!');
+                } else {
+                    responseDiv.innerHTML = `<span style="color: var(--error);">// Fehler! Status: ${response.status}</span>\n${await response.text()}`;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<span style="color: var(--error);">// Netzwerkfehler</span>\n${error.message}`;
+                console.error('Kite API Error:', error);
+            }
+        }
+
+        // Update API Request Body Display
+        function updateAPIRequestBody() {
+            document.getElementById('apiRobloxUsername').textContent = userData.roblox ? userData.roblox.username : 'Nicht verifiziert';
+            document.getElementById('apiTimestamp').textContent = new Date().toISOString();
+            
+            const requestBody = document.getElementById('apiRequestBody');
+            requestBody.innerHTML = `{
+  "discord_id": "<span id="apiDiscordId\">${userData.discord.id}</span>",
+  "discord_username": "<span id="apiDiscordUsername\">${userData.discord.username}</span>",
+  "roblox_username": "<span id="apiRobloxUsername\">${userData.roblox ? userData.roblox.username : 'Nicht verifiziert'}</span>",
+  "verified": <span id="apiVerified\">${userData.verified}</span>,
+  "timestamp": "<span id="apiTimestamp\">${new Date().toISOString()}</span>"
+}`;
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('robloxauth_user');
+            window.location.href = '/';
+        }
+
+        // Update stats
+        document.getElementById('serverCount').textContent = Math.floor(Math.random() * 5) + 1;
     </script>
 </body>
 </html>
