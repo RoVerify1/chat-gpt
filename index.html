@@ -129,4 +129,135 @@
         &copy; 2026 RobloxAuth • Nicht verbunden mit Discord oder Roblox
     </footer>
 </body>
+</html><!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RobloxAuth - Discord Verifizierung</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        :root {
+            --orange: #FF6B35; --red: #FF4500; --bg: #0f0f1e;
+            --card: rgba(255,255,255,0.03); --text: #fff; --gray: #a0a0b0;
+            --border: rgba(255,107,53,0.3);
+        }
+        body {
+            background: linear-gradient(135deg, var(--bg), #1a0f0f, var(--bg));
+            min-height: 100vh; color: var(--text);
+        }
+        .bg-orb {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            filter: blur(80px); opacity: 0.3; animation: float 20s infinite;
+            background: linear-gradient(135deg, var(--orange), var(--red));
+            left: -200px; top: -200px; z-index: -1;
+        }
+        @keyframes float {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-50px) scale(1.1); }
+            66% { transform: translate(-20px,30px) scale(0.9); }
+        }
+        nav {
+            display: flex; justify-content: center; padding: 20px;
+            background: rgba(15,15,30,0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo {
+            display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 800;
+            background: linear-gradient(135deg, var(--orange), var(--red));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .logo-icon {
+            width: 45px; height: 45px; background: linear-gradient(135deg, var(--orange), var(--red));
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        }
+        .logo-icon::before {
+            content: ''; position: absolute; width: 60%; height: 60%;
+            background: white; border-radius: 4px;
+        }
+        .hero {
+            min-height: calc(100vh - 85px); display: flex; align-items: center;
+            justify-content: center; padding: 40px 20px; text-align: center;
+        }
+        .hero h1 {
+            font-size: 48px; margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, var(--orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 18px; color: var(--gray); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+        .btn-discord {
+            padding: 16px 40px; background: #5865F2; color: white; border: none;
+            border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 12px;
+            transition: all 0.3s; text-decoration: none;
+            box-shadow: 0 4px 20px rgba(88,101,242,0.4);
+        }
+        .btn-discord:hover {
+            background: #4752C4; transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(88,101,242,0.6);
+        }
+        .card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 40px; max-width: 500px; margin: 0 auto;
+            backdrop-filter: blur(20px);
+        }
+        .card h2 {
+            text-align: center; margin-bottom: 30px; color: var(--orange);
+        }
+        .oauth-btn {
+            width: 100%; padding: 16px; background: linear-gradient(135deg, #5865F2, #4752C4);
+            color: white; border: none; border-radius: 12px; font-size: 16px;
+            font-weight: 600; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 12px; margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .oauth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        footer {
+            text-align: center; padding: 30px; color: var(--gray);
+            border-top: 1px solid var(--border); font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-orb"></div>
+    
+    <nav>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            RobloxAuth
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div>
+            <h1>Discord Verifizierung für Roblox</h1>
+            <p>Verbinde deinen Account sicher mit Discord. Schnell, einfach und ohne Passwort-Weitergabe.</p>
+            
+            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-gamma-two-67.vercel.app%2Fdashboard&scope=identify+email" 
+               class="btn-discord">
+                <i class="fab fa-discord"></i> Mit Discord anmelden
+            </a>
+            
+            <div class="card" style="margin-top: 40px;">
+                <h2><i class="fas fa-shield-alt"></i> Sicher & Einfach</h2>
+                <p style="color: var(--gray); text-align: center; line-height: 1.6;">
+                    ✓ Offizielle Discord OAuth2 API<br>
+                    ✓ Keine Passwort-Speicherung<br>
+                    ✓ Automatische Rollenvergabe<br>
+                    ✓ Mobile-optimiert
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 RobloxAuth • Nicht verbunden mit Discord oder Roblox
+    </footer>
+</body>
 </html>
