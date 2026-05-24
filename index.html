@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         :root {
@@ -39,7 +39,7 @@
             z-index: -1;
         }
 
-        .bg-animation .gradient-orb {
+        .gradient-orb {
             position: absolute;
             border-radius: 50%;
             filter: blur(80px);
@@ -47,7 +47,7 @@
             animation: float 20s infinite ease-in-out;
         }
 
-        .bg-animation .gradient-orb:nth-child(1) {
+        .gradient-orb:nth-child(1) {
             width: 600px;
             height: 600px;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
@@ -55,7 +55,7 @@
             top: -200px;
         }
 
-        .bg-animation .gradient-orb:nth-child(2) {
+        .gradient-orb:nth-child(2) {
             width: 500px;
             height: 500px;
             background: linear-gradient(135deg, var(--primary-red), var(--primary-orange));
@@ -78,6 +78,9 @@
             backdrop-filter: blur(20px);
             background: rgba(15, 15, 30, 0.8);
             border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .logo {
@@ -100,6 +103,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
         }
 
         .logo-icon::before {
@@ -135,6 +139,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.1;
+            font-weight: 800;
         }
 
         .hero-content p {
@@ -184,6 +189,7 @@
             margin-bottom: 35px;
             color: var(--primary-orange);
             font-size: 28px;
+            font-weight: 700;
         }
 
         .oauth-btn {
@@ -220,6 +226,25 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff, var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .section-title p {
+            color: var(--text-gray);
+            font-size: 18px;
+        }
+
         .features-grid {
             max-width: 1200px;
             margin: 0 auto;
@@ -235,6 +260,13 @@
             border-radius: 20px;
             padding: 35px;
             text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-orange);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
         }
 
         .feature-icon {
@@ -248,12 +280,14 @@
             justify-content: center;
             font-size: 32px;
             color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
         }
 
         .feature-card h3 {
             font-size: 22px;
             margin-bottom: 12px;
             color: var(--primary-orange);
+            font-weight: 700;
         }
 
         .feature-card p {
@@ -277,6 +311,10 @@
             .hero-content h1 {
                 font-size: 38px;
             }
+
+            .section-title h2 {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
@@ -298,52 +336,56 @@
             <div class="hero-content">
                 <h1>Sichere Discord Verifizierung für Roblox</h1>
                 <p>Verbinde deinen Roblox-Account sicher mit Discord. Automatisierte Rollenvergabe und OAuth2-Sicherheit für deine Community.</p>
-                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2Fdashboard&scope=identify+email" class="btn btn-discord">
+                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord">
                     <i class="fab fa-discord"></i> Mit Discord starten
                 </a>
             </div>
 
             <div class="verification-card">
                 <h2><i class="fas fa-shield-alt"></i> Verifizierung</h2>
-                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2Fdashboard&scope=identify+email" class="oauth-btn discord">
+                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="oauth-btn discord">
                     <i class="fab fa-discord"></i>
                     Mit Discord anmelden
                 </a>
                 <p style="text-align: center; color: var(--text-gray); margin-top: 20px; font-size: 14px;">
-                    Sicher & Schnell • Keine Passwort-Weitergabe
+                    <i class="fas fa-lock"></i> Sicher & Schnell • Keine Passwort-Weitergabe
                 </p>
             </div>
         </div>
     </section>
 
     <section class="features">
+        <div class="section-title">
+            <h2>Warum RobloxAuth?</h2>
+            <p>Die beste Lösung für deine Roblox-Discord Community</p>
+        </div>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 <h3>OAuth2 Sicherheit</h3>
-                <p>Nutze die offizielle Discord OAuth2 API. Maximale Sicherheit für deine Daten.</p>
+                <p>Nutze die offizielle Discord OAuth2 API. Maximale Sicherheit für deine Daten ohne Passwort-Weitergabe.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-bolt"></i>
                 </div>
                 <h3>Blitzschnell</h3>
-                <p>Verifiziere dich in unter 10 Sekunden mit automatischer Rollenvergabe.</p>
+                <p>Verifiziere dich in unter 10 Sekunden mit automatischer Rollenvergabe in deinem Discord Server.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-gamepad"></i>
                 </div>
                 <h3>Roblox Integration</h3>
-                <p>Verknüpfe deinen Roblox-Account und erhalte exklusive Roles.</p>
+                <p>Verknüpfe deinen Roblox-Account und erhalte exklusive Roles und Zugriff auf spezielle Channels.</p>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 RobloxAuth. Alle Rechte vorbehalten.</p>
+        <p>&copy; 2026 RobloxAuth. Alle Rechte vorbehalten. Nicht verbunden mit Roblox Corporation oder Discord Inc.</p>
     </footer>
 </body>
 </html>
