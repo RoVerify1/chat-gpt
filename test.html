@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RobloxAuth - Discord Verifizierung</title>
+    <title>RobloxAuth - Discord & Roblox Verifizierung</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         :root {
             --primary-orange: #FF6B35;
@@ -24,6 +19,7 @@
             --text-light: #ffffff;
             --text-gray: #a0a0b0;
             --border-color: rgba(255, 107, 53, 0.3);
+            --success-green: #00C853;
         }
 
         body {
@@ -33,831 +29,542 @@
             overflow-x: hidden;
         }
 
-        /* Animated Background */
+        /* ===== BACKGROUND ANIMATION ===== */
         .bg-animation {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            overflow: hidden;
+            position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; overflow: hidden;
         }
-
         .bg-animation .gradient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4;
             animation: float 20s infinite ease-in-out;
         }
-
         .bg-animation .gradient-orb:nth-child(1) {
-            width: 600px;
-            height: 600px;
+            width: 600px; height: 600px;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            left: -200px;
-            top: -200px;
-            animation-delay: 0s;
+            left: -200px; top: -200px; animation-delay: 0s;
         }
-
         .bg-animation .gradient-orb:nth-child(2) {
-            width: 500px;
-            height: 500px;
+            width: 500px; height: 500px;
             background: linear-gradient(135deg, var(--secondary-red), var(--accent-yellow));
-            right: -150px;
-            top: 20%;
-            animation-delay: 5s;
+            right: -150px; top: 20%; animation-delay: 5s;
         }
-
         .bg-animation .gradient-orb:nth-child(3) {
-            width: 450px;
-            height: 450px;
+            width: 450px; height: 450px;
             background: linear-gradient(135deg, var(--primary-red), var(--primary-orange));
-            bottom: -150px;
-            left: 30%;
-            animation-delay: 10s;
+            bottom: -150px; left: 30%; animation-delay: 10s;
         }
-
         @keyframes float {
             0%, 100% { transform: translate(0, 0) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
             66% { transform: translate(-20px, 30px) scale(0.9); }
         }
 
-        /* Navigation */
+        /* ===== NAVIGATION ===== */
         nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            backdrop-filter: blur(20px);
-            background: rgba(15, 15, 30, 0.8);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; backdrop-filter: blur(20px);
+            background: rgba(15, 15, 30, 0.8); position: fixed; width: 100%; top: 0; z-index: 1000;
             border-bottom: 1px solid var(--border-color);
         }
-
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 26px;
-            font-weight: 800;
+            display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 800;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            cursor: pointer;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; cursor: pointer;
         }
-
         .logo-icon {
-            width: 45px;
-            height: 45px;
+            width: 45px; height: 45px;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
             box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
         }
-
         .logo-icon::before {
-            content: '';
-            position: absolute;
-            width: 60%;
-            height: 60%;
-            background: white;
-            border-radius: 4px;
-            opacity: 0.9;
+            content: ''; position: absolute; width: 60%; height: 60%;
+            background: white; border-radius: 4px; opacity: 0.9;
         }
-
         .logo-icon::after {
-            content: '';
-            position: absolute;
-            width: 30%;
-            height: 30%;
-            background: var(--primary-red);
-            border-radius: 50%;
-            bottom: 8px;
-            right: 8px;
+            content: ''; position: absolute; width: 30%; height: 30%;
+            background: var(--primary-red); border-radius: 50%;
+            bottom: 8px; right: 8px;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 35px;
-            align-items: center;
-        }
-
+        .nav-links { display: flex; gap: 35px; align-items: center; }
         .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: all 0.3s;
-            font-weight: 500;
-            font-size: 15px;
+            color: var(--text-light); text-decoration: none; transition: all 0.3s;
+            font-weight: 500; font-size: 15px;
         }
-
-        .nav-links a:hover {
-            color: var(--primary-orange);
-            transform: translateY(-2px);
-        }
-
+        .nav-links a:hover { color: var(--primary-orange); transform: translateY(-2px); }
         .btn {
-            padding: 12px 28px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 15px;
+            padding: 12px 28px; border: none; border-radius: 30px; cursor: pointer;
+            font-weight: 600; transition: all 0.3s; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 10px; font-size: 15px;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            color: white;
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+            color: white; box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
         }
-
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+            transform: translateY(-3px); box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
         }
-
         .btn-secondary {
-            background: transparent;
-            color: var(--primary-orange);
+            background: transparent; color: var(--primary-orange);
             border: 2px solid var(--primary-orange);
         }
-
-        .btn-secondary:hover {
-            background: var(--primary-orange);
-            color: white;
-        }
-
+        .btn-secondary:hover { background: var(--primary-orange); color: white; }
         .btn-discord {
-            background: #5865F2;
-            color: white;
+            background: #5865F2; color: white;
             box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
         }
-
         .btn-discord:hover {
-            background: #4752C4;
-            transform: translateY(-3px);
+            background: #4752C4; transform: translateY(-3px);
             box-shadow: 0 8px 30px rgba(88, 101, 242, 0.6);
         }
+        .btn-roblox {
+            background: linear-gradient(135deg, #000, #1a1a1a);
+            color: white; border: 2px solid var(--primary-orange);
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.2);
+        }
+        .btn-roblox:hover {
+            border-color: var(--primary-red);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.4);
+            transform: translateY(-3px);
+        }
+        .btn-logout {
+            background: rgba(255, 69, 0, 0.2); color: var(--primary-orange);
+            border: 1px solid var(--primary-orange);
+        }
+        .btn-logout:hover { background: var(--primary-orange); color: white; }
 
-        /* Hero Section */
+        /* ===== VIEWS MANAGEMENT ===== */
+        .view { display: none; animation: fadeIn 0.4s ease; }
+        .view.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== HERO SECTION ===== */
         .hero {
-            margin-top: 100px;
-            padding: 80px 5%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 100px; padding: 80px 5%;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+            align-items: center; max-width: 1400px; margin: 100px auto 0;
         }
-
         .hero-content h1 {
-            font-size: 56px;
-            margin-bottom: 25px;
+            font-size: 56px; margin-bottom: 25px;
             background: linear-gradient(135deg, #fff 0%, var(--primary-orange) 50%, var(--primary-red) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-            font-weight: 800;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; line-height: 1.1; font-weight: 800;
         }
-
         .hero-content p {
-            font-size: 20px;
-            color: var(--text-gray);
-            margin-bottom: 40px;
-            line-height: 1.7;
+            font-size: 20px; color: var(--text-gray); margin-bottom: 40px; line-height: 1.7;
         }
-
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
+        .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; }
         .hero-stats {
-            display: flex;
-            gap: 40px;
-            margin-top: 50px;
-            padding-top: 40px;
+            display: flex; gap: 40px; margin-top: 50px; padding-top: 40px;
             border-top: 1px solid var(--border-color);
         }
-
         .hero-stat h3 {
             font-size: 32px;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; font-weight: 700;
         }
-
-        .hero-stat p {
-            color: var(--text-gray);
-            font-size: 14px;
-            margin: 0;
-        }
-
+        .hero-stat p { color: var(--text-gray); font-size: 14px; margin: 0; }
         .hero-image {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative; display: flex; justify-content: center; align-items: center;
         }
 
+        /* ===== AUTH CARD ===== */
         .verification-card {
             background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(255, 69, 0, 0.15));
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 107, 53, 0.4);
-            border-radius: 30px;
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 25px 80px rgba(255, 107, 53, 0.3), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px); border: 1px solid rgba(255, 107, 53, 0.4);
+            border-radius: 30px; padding: 50px 40px; width: 100%; max-width: 480px;
+            box-shadow: 0 25px 80px rgba(255, 107, 53, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             animation: cardFloat 6s infinite ease-in-out;
         }
-
         @keyframes cardFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
-
         .verification-card h2 {
-            text-align: center;
-            margin-bottom: 35px;
-            color: var(--primary-orange);
-            font-size: 28px;
-            font-weight: 700;
+            text-align: center; margin-bottom: 35px; color: var(--primary-orange);
+            font-size: 28px; font-weight: 700;
         }
-
         .tab-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 35px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 5px;
-            border-radius: 15px;
+            display: flex; gap: 10px; margin-bottom: 35px;
+            background: rgba(0, 0, 0, 0.3); padding: 5px; border-radius: 15px;
         }
-
         .tab {
-            flex: 1;
-            padding: 14px;
-            background: transparent;
-            border: none;
-            border-radius: 12px;
-            color: var(--text-gray);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-size: 15px;
+            flex: 1; padding: 14px; background: transparent; border: none;
+            border-radius: 12px; color: var(--text-gray); cursor: pointer;
+            transition: all 0.3s; font-weight: 600; font-size: 15px;
         }
-
         .tab.active {
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            color: white; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
         }
+        .form-section { display: none; }
+        .form-section.active { display: block; animation: fadeIn 0.5s; }
 
-        .form-section {
-            display: none;
+        /* ===== OTP SECTION ===== */
+        .otp-section {
+            text-align: center; padding: 20px 0;
         }
-
-        .form-section.active {
-            display: block;
-            animation: fadeIn 0.5s;
+        .otp-section p { color: var(--text-gray); margin-bottom: 25px; }
+        .otp-inputs {
+            display: flex; gap: 10px; justify-content: center; margin-bottom: 25px;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .oauth-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .oauth-btn {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            cursor: pointer;
+        .otp-inputs input {
+            width: 50px; height: 60px; text-align: center; font-size: 24px;
+            font-weight: 700; border: 2px solid var(--border-color);
+            border-radius: 12px; background: rgba(0, 0, 0, 0.4); color: white;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 16px;
-            text-decoration: none;
         }
-
-        .oauth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        .otp-inputs input:focus {
+            outline: none; border-color: var(--primary-orange);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
         }
+        .otp-resend {
+            color: var(--text-gray); font-size: 14px; margin-top: 15px;
+        }
+        .otp-resend a {
+            color: var(--primary-orange); text-decoration: none; font-weight: 600;
+        }
+        .otp-resend a:hover { text-decoration: underline; }
+        .otp-resend.disabled { opacity: 0.5; pointer-events: none; }
 
+        /* ===== OAUTH BUTTONS ===== */
+        .oauth-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        .oauth-btn {
+            width: 100%; padding: 16px; border: 2px solid var(--border-color);
+            border-radius: 12px; background: rgba(0, 0, 0, 0.3); color: white;
+            cursor: pointer; transition: all 0.3s; display: flex;
+            align-items: center; justify-content: center; gap: 12px;
+            font-weight: 600; font-size: 16px; text-decoration: none;
+        }
+        .oauth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
         .oauth-btn.discord {
-            background: linear-gradient(135deg, #5865F2, #4752C4);
-            border-color: #5865F2;
+            background: linear-gradient(135deg, #5865F2, #4752C4); border-color: #5865F2;
         }
-
         .oauth-btn.roblox {
-            background: linear-gradient(135deg, #000000, #1a1a1a);
-            border-color: var(--primary-orange);
+            background: linear-gradient(135deg, #000000, #1a1a1a); border-color: var(--primary-orange);
         }
-
-        .oauth-btn:hover.discord {
-            background: linear-gradient(135deg, #4752C4, #3a45a8);
-        }
-
+        .oauth-btn:hover.discord { background: linear-gradient(135deg, #4752C4, #3a45a8); }
         .oauth-btn:hover.roblox {
             border-color: var(--primary-red);
             box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
         }
 
+        /* ===== FORMS ===== */
         .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: var(--text-gray);
-            font-size: 14px;
+            display: flex; align-items: center; margin: 25px 0;
+            color: var(--text-gray); font-size: 14px;
         }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border-color);
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border-color);
         }
-
-        .divider span {
-            padding: 0 15px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
+        .divider span { padding: 0 15px; }
+        .form-group { margin-bottom: 20px; }
         .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-light);
-            font-weight: 500;
-            font-size: 14px;
+            display: block; margin-bottom: 8px; color: var(--text-light);
+            font-weight: 500; font-size: 14px;
         }
-
         .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            font-size: 15px;
-            transition: all 0.3s;
+            width: 100%; padding: 15px; border: 2px solid var(--border-color);
+            border-radius: 12px; background: rgba(0, 0, 0, 0.4); color: white;
+            font-size: 15px; transition: all 0.3s;
         }
-
         .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-orange);
+            outline: none; border-color: var(--primary-orange);
             box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
         }
-
-        .form-group input::placeholder {
-            color: var(--text-gray);
-        }
-
+        .form-group input::placeholder { color: var(--text-gray); }
         .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 25px;
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 25px;
         }
-
         .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-top: 2px;
-            accent-color: var(--primary-orange);
-            cursor: pointer;
+            width: 18px; height: 18px; margin-top: 2px;
+            accent-color: var(--primary-orange); cursor: pointer;
         }
-
         .checkbox-group label {
-            color: var(--text-gray);
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 1.5;
+            color: var(--text-gray); cursor: pointer; font-size: 14px; line-height: 1.5;
         }
-
-        .checkbox-group a {
-            color: var(--primary-orange);
-            text-decoration: none;
-        }
-
-        .checkbox-group a:hover {
-            text-decoration: underline;
-        }
-
+        .checkbox-group a { color: var(--primary-orange); text-decoration: none; }
+        .checkbox-group a:hover { text-decoration: underline; }
         .form-footer {
-            text-align: center;
-            color: var(--text-gray);
-            margin-top: 25px;
-            font-size: 14px;
+            text-align: center; color: var(--text-gray); margin-top: 25px; font-size: 14px;
         }
+        .form-footer a { color: var(--primary-orange); text-decoration: none; font-weight: 600; }
+        .form-footer a:hover { text-decoration: underline; }
 
-        .form-footer a {
-            color: var(--primary-orange);
-            text-decoration: none;
-            font-weight: 600;
+        /* ===== DASHBOARD ===== */
+        .dashboard {
+            padding: 120px 5% 80px; min-height: 100vh;
         }
-
-        .form-footer a:hover {
-            text-decoration: underline;
+        .dashboard-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 50px; padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
         }
-
-        /* Features Section */
-        .features {
-            padding: 120px 5%;
-            background: rgba(0, 0, 0, 0.2);
+        .dashboard-header h1 {
+            font-size: 36px; background: linear-gradient(135deg, #fff, var(--primary-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; font-weight: 800;
         }
-
-        .features-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .user-info {
+            display: flex; align-items: center; gap: 15px;
+            background: var(--card-bg); padding: 12px 20px;
+            border-radius: 15px; border: 1px solid var(--border-color);
         }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 70px;
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 18px;
         }
-
-        .section-title h2 {
-            font-size: 48px;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #fff, var(--primary-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
+        .dashboard-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px; max-width: 1200px; margin: 0 auto;
         }
-
-        .section-title p {
-            color: var(--text-gray);
-            font-size: 18px;
+        .dashboard-card {
+            background: var(--card-bg); backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color); border-radius: 24px;
+            padding: 35px; transition: all 0.3s;
         }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 40px 35px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-orange), var(--primary-red));
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-orange);
+        .dashboard-card:hover {
+            transform: translateY(-5px); border-color: var(--primary-orange);
             box-shadow: 0 20px 60px rgba(255, 107, 53, 0.2);
         }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
+        .dashboard-card h3 {
+            font-size: 22px; margin-bottom: 20px; color: var(--primary-orange);
+            display: flex; align-items: center; gap: 10px;
         }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 25px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: white;
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        .account-status {
+            display: flex; align-items: center; gap: 10px;
+            padding: 15px; background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px; margin-bottom: 25px;
         }
-
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: var(--primary-orange);
-            font-weight: 700;
+        .status-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--secondary-red);
         }
-
-        .feature-card p {
-            color: var(--text-gray);
-            line-height: 1.7;
-            font-size: 15px;
+        .status-dot.connected { background: var(--success-green); }
+        .status-text { color: var(--text-gray); font-size: 14px; }
+        .status-text.connected { color: var(--success-green); font-weight: 600; }
+        .roblox-connect {
+            text-align: center; padding: 30px 20px;
         }
-
-        /* How It Works */
-        .how-it-works {
-            padding: 120px 5%;
+        .roblox-connect .roblox-icon {
+            width: 80px; height: 80px; margin: 0 auto 25px;
+            background: linear-gradient(135deg, #000, #1a1a1a);
+            border: 3px solid var(--primary-orange); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px; color: var(--primary-orange);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
         }
-
-        .steps-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
+        .roblox-connect h4 {
+            font-size: 20px; margin-bottom: 12px; color: var(--text-light);
         }
-
-        .step {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 35px;
-            transition: all 0.3s;
-        }
-
-        .step:hover {
-            transform: translateX(10px);
-            border-color: var(--primary-orange);
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 800;
-            color: white;
-            flex-shrink: 0;
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
-        }
-
-        .step-content h3 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            color: var(--primary-orange);
-        }
-
-        .step-content p {
-            color: var(--text-gray);
+        .roblox-connect p {
+            color: var(--text-gray); font-size: 14px; margin-bottom: 25px;
             line-height: 1.6;
         }
-
-        /* CTA Section */
-        .cta {
-            padding: 120px 5%;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 69, 0, 0.1));
-            position: relative;
-            overflow: hidden;
+        .permission-list {
+            text-align: left; margin: 25px 0;
         }
+        .permission-list li {
+            color: var(--text-gray); font-size: 14px; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .permission-list i { color: var(--success-green); }
+        .dashboard-stats {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+        }
+        .stat-item {
+            background: rgba(0, 0, 0, 0.2); padding: 20px;
+            border-radius: 15px; text-align: center;
+        }
+        .stat-item .value {
+            font-size: 28px; font-weight: 700; color: var(--primary-orange);
+            margin-bottom: 5px;
+        }
+        .stat-item .label { color: var(--text-gray); font-size: 13px; }
 
+        /* ===== FEATURES & OTHER SECTIONS ===== */
+        .features { padding: 120px 5%; background: rgba(0, 0, 0, 0.2); }
+        .features-container { max-width: 1200px; margin: 0 auto; }
+        .section-title {
+            text-align: center; margin-bottom: 70px;
+        }
+        .section-title h2 {
+            font-size: 48px; margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff, var(--primary-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; font-weight: 800;
+        }
+        .section-title p { color: var(--text-gray); font-size: 18px; }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background: var(--card-bg); backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color); border-radius: 24px;
+            padding: 40px 35px; transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--primary-orange), var(--primary-red));
+            transform: scaleX(0); transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px); border-color: var(--primary-orange);
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.2);
+        }
+        .feature-card:hover::before { transform: scaleX(1); }
+        .feature-icon {
+            width: 70px; height: 70px; margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            border-radius: 16px; display: flex; align-items: center;
+            justify-content: center; font-size: 32px; color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+        .feature-card h3 {
+            font-size: 22px; margin-bottom: 12px; color: var(--primary-orange);
+            font-weight: 700;
+        }
+        .feature-card p { color: var(--text-gray); line-height: 1.7; font-size: 15px; }
+
+        .how-it-works { padding: 120px 5%; }
+        .steps-container {
+            max-width: 1000px; margin: 0 auto;
+            display: flex; flex-direction: column; gap: 30px;
+        }
+        .step {
+            display: flex; gap: 30px; align-items: center;
+            background: var(--card-bg); backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color); border-radius: 20px;
+            padding: 35px; transition: all 0.3s;
+        }
+        .step:hover {
+            transform: translateX(10px); border-color: var(--primary-orange);
+        }
+        .step-number {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 28px; font-weight: 800;
+            color: white; flex-shrink: 0;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        .step-content h3 {
+            font-size: 24px; margin-bottom: 8px; color: var(--primary-orange);
+        }
+        .step-content p { color: var(--text-gray); line-height: 1.6; }
+
+        .cta {
+            padding: 120px 5%; text-align: center;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 69, 0, 0.1));
+            position: relative; overflow: hidden;
+        }
         .cta::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
             animation: pulse 4s infinite;
         }
-
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 0.5; }
             50% { transform: scale(1.1); opacity: 0.8; }
         }
-
-        .cta-content {
-            position: relative;
-            z-index: 1;
-        }
-
+        .cta-content { position: relative; z-index: 1; }
         .cta h2 {
-            font-size: 48px;
-            margin-bottom: 20px;
+            font-size: 48px; margin-bottom: 20px;
             background: linear-gradient(135deg, #fff, var(--primary-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; font-weight: 800;
         }
-
         .cta p {
-            color: var(--text-gray);
-            font-size: 20px;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            color: var(--text-gray); font-size: 20px; margin-bottom: 40px;
+            max-width: 600px; margin-left: auto; margin-right: auto;
         }
 
-        /* Footer */
+        /* ===== FOOTER ===== */
         footer {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 60px 5% 30px;
+            background: rgba(0, 0, 0, 0.4); padding: 60px 5% 30px;
             border-top: 1px solid var(--border-color);
         }
-
         .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 60px;
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;
             margin-bottom: 40px;
         }
-
-        .footer-brand .logo {
-            margin-bottom: 15px;
-        }
-
+        .footer-brand .logo { margin-bottom: 15px; }
         .footer-brand p {
-            color: var(--text-gray);
-            line-height: 1.7;
-            font-size: 14px;
+            color: var(--text-gray); line-height: 1.7; font-size: 14px;
         }
-
         .footer-links h4 {
-            color: var(--text-light);
-            margin-bottom: 20px;
-            font-size: 16px;
-            font-weight: 600;
+            color: var(--text-light); margin-bottom: 20px;
+            font-size: 16px; font-weight: 600;
         }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
         .footer-links a {
-            color: var(--text-gray);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 14px;
+            color: var(--text-gray); text-decoration: none;
+            transition: color 0.3s; font-size: 14px;
         }
-
-        .footer-links a:hover {
-            color: var(--primary-orange);
-        }
-
+        .footer-links a:hover { color: var(--primary-orange); }
         .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
+            text-align: center; padding-top: 30px;
             border-top: 1px solid var(--border-color);
-            color: var(--text-gray);
-            font-size: 14px;
+            color: var(--text-gray); font-size: 14px;
         }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
         .social-links a {
-            width: 40px;
-            height: 40px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-light);
-            transition: all 0.3s;
+            width: 40px; height: 40px; background: var(--card-bg);
+            border: 1px solid var(--border-color); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-light); transition: all 0.3s;
         }
-
         .social-links a:hover {
-            background: var(--primary-orange);
-            border-color: var(--primary-orange);
+            background: var(--primary-orange); border-color: var(--primary-orange);
             transform: translateY(-3px);
         }
 
-        /* Responsive */
-        @media (max-width: 968px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 60px;
-            }
-
-            .hero-content h1 {
-                font-size: 42px;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .hero-stats {
-                justify-content: center;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .step {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* Loading Animation */
+        /* ===== UTILITIES ===== */
         .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+            display: inline-block; width: 20px; height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
+            border-top-color: white; animation: spin 1s ease-in-out infinite;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Success Animation */
+        @keyframes spin { to { transform: rotate(360deg); } }
         .success-checkmark {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #00C853, #00E676);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: white;
+            width: 60px; height: 60px; margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--success-green), #00E676);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 32px; color: white;
             animation: scaleIn 0.5s;
         }
+        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mb-20 { margin-bottom: 20px; }
+        .mt-20 { margin-top: 20px; }
 
-        @keyframes scaleIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr; text-align: center; gap: 60px;
+            }
+            .hero-content h1 { font-size: 42px; }
+            .hero-buttons { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .nav-links { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; gap: 40px; }
+            .step { flex-direction: column; text-align: center; }
+            .dashboard-header { flex-direction: column; gap: 20px; text-align: center; }
+            .dashboard-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -871,220 +578,374 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="logo" onclick="window.scrollTo(0,0)">
+        <div class="logo" onclick="showView('home')">
             <div class="logo-icon"></div>
             RobloxAuth
         </div>
-        <div class="nav-links">
-            <a href="#home">Startseite</a>
-            <a href="#features">Funktionen</a>
-            <a href="#how-it-works">So funktioniert's</a>
-            <a href="#support">Support</a>
-            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" target="_blank">
+        <div class="nav-links" id="navLinks">
+            <a href="#" onclick="showView('home')">Startseite</a>
+            <a href="#features" onclick="showView('home'); setTimeout(() => document.getElementById('features')?.scrollIntoView(), 100)">Funktionen</a>
+            <a href="#how-it-works" onclick="showView('home'); setTimeout(() => document.getElementById('how-it-works')?.scrollIntoView(), 100)">So funktioniert's</a>
+            <a href="#support" onclick="showView('home')">Support</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=YOUR_DISCORD_CLIENT_ID&response_type=code&redirect_uri=YOUR_REDIRECT_URI&scope=identify+email" class="btn btn-discord" target="_blank">
                 <i class="fab fa-discord"></i> Discord Login
             </a>
         </div>
+        <div class="nav-links hidden" id="navLinksAuth">
+            <a href="#" onclick="showView('dashboard')">Dashboard</a>
+            <a href="#features">Funktionen</a>
+            <a href="#support">Support</a>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userEmail">user@email.de</span>
+            </div>
+            <button class="btn btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Sichere Discord Verifizierung für Roblox</h1>
-            <p>Verbinde deinen Roblox-Account sicher mit Discord. Automatisierte Rollenvergabe, OAuth2-Sicherheit und blitzschnelle Verifizierung für deine Community.</p>
-            <div class="hero-buttons">
-                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" target="_blank">
-                    <i class="fab fa-discord"></i> Mit Discord starten
-                </a>
-                <a href="#how-it-works" class="btn btn-secondary">
-                    <i class="fas fa-play"></i> Anleitung
-                </a>
-            </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <h3>50K+</h3>
-                    <p>Verifizierte User</p>
+    <!-- ===== VIEW: HOME / AUTH ===== -->
+    <div id="view-home" class="view active">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Sichere Discord & Roblox Verifizierung</h1>
+                <p>Verbinde deinen Roblox-Account sicher mit Discord. OTP-geschützte Registrierung, OAuth2-Sicherheit und automatisierte Rollenvergabe für deine Community.</p>
+                <div class="hero-buttons">
+                    <a href="https://discord.com/oauth2/authorize?client_id=YOUR_DISCORD_CLIENT_ID&response_type=code&redirect_uri=YOUR_REDIRECT_URI&scope=identify+email" class="btn btn-discord" target="_blank">
+                        <i class="fab fa-discord"></i> Mit Discord starten
+                    </a>
+                    <button class="btn btn-roblox" onclick="startRobloxOAuth()">
+                        <i class="fas fa-gamepad"></i> Mit Roblox starten
+                    </button>
                 </div>
-                <div class="hero-stat">
-                    <h3>1000+</h3>
-                    <p>Discord Server</p>
-                </div>
-                <div class="hero-stat">
-                    <h3>99.9%</h3>
-                    <p>Uptime</p>
+                <div class="hero-stats">
+                    <div class="hero-stat"><h3>50K+</h3><p>Verifizierte User</p></div>
+                    <div class="hero-stat"><h3>1000+</h3><p>Discord Server</p></div>
+                    <div class="hero-stat"><h3>99.9%</h3><p>Uptime</p></div>
                 </div>
             </div>
-        </div>
 
-        <div class="hero-image">
-            <div class="verification-card">
-                <h2><i class="fas fa-shield-alt"></i> Verifizierung</h2>
-                
-                <div class="tab-container">
-                    <button class="tab active" onclick="switchTab('login')">Login</button>
-                    <button class="tab" onclick="switchTab('register')">Registrieren</button>
+            <div class="hero-image">
+                <div class="verification-card">
+                    <h2><i class="fas fa-shield-alt"></i> Konto</h2>
+                    
+                    <div class="tab-container">
+                        <button class="tab active" onclick="switchTab('login')">Login</button>
+                        <button class="tab" onclick="switchTab('register')">Registrieren</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="loginForm" class="form-section active">
+                        <div class="oauth-buttons">
+                            <a href="https://discord.com/oauth2/authorize?client_id=YOUR_DISCORD_CLIENT_ID&response_type=code&redirect_uri=YOUR_REDIRECT_URI&scope=identify+email" class="oauth-btn discord" target="_blank">
+                                <i class="fab fa-discord"></i> Mit Discord anmelden
+                            </a>
+                            <button class="oauth-btn roblox" onclick="startRobloxOAuth()">
+                                <i class="fas fa-gamepad"></i> Mit Roblox anmelden
+                            </button>
+                        </div>
+                        <div class="divider"><span>oder mit E-Mail</span></div>
+                        <form onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
+                                <input type="email" id="loginEmail" placeholder="deine@email.de" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Passwort</label>
+                                <input type="password" id="loginPassword" placeholder="••••••••" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
+                                <i class="fas fa-sign-in-alt"></i> Anmelden
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="registerForm" class="form-section">
+                        <form onsubmit="handleRegisterStart(event)">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Roblox Username</label>
+                                <input type="text" id="regRoblox" placeholder="DeinRobloxName" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
+                                <input type="email" id="regEmail" placeholder="deine@email.de" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Passwort</label>
+                                <input type="password" id="regPassword" placeholder="Mindestens 8 Zeichen" required minlength="8">
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="terms" required>
+                                <label for="terms">Ich akzeptiere die <a href="#">AGB</a> und <a href="#">Datenschutzerklärung</a></label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
+                                <i class="fas fa-user-plus"></i> Registrieren & Code erhalten
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- OTP Verification Form -->
+                    <div id="otpForm" class="form-section">
+                        <div class="otp-section">
+                            <div style="font-size: 48px; margin-bottom: 15px;">🔐</div>
+                            <h3 style="margin-bottom: 10px; color: var(--primary-orange);">Code eingeben</h3>
+                            <p>Wir haben einen 6-stelligen Code an <strong id="otpEmailDisplay">deine@email.de</strong> gesendet.</p>
+                            
+                            <div class="otp-inputs">
+                                <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                                <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                                <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                                <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                                <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                                <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                            </div>
+                            
+                            <button type="button" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;" onclick="verifyOTP()">
+                                <i class="fas fa-check"></i> Code bestätigen
+                            </button>
+                            
+                            <p class="otp-resend" id="otpResend">
+                                Kein Code erhalten? <a href="#" onclick="resendOTP(event)">Erneut senden</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        <p id="formFooterText">Noch kein Konto? <a href="#" onclick="switchTab('register')">Jetzt registrieren</a></p>
+                    </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Login Form -->
-                <div id="loginForm" class="form-section active">
-                    <div class="oauth-buttons">
-                        <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="oauth-btn discord" target="_blank">
-                            <i class="fab fa-discord"></i>
-                            Mit Discord anmelden
-                        </a>
-                        <button class="oauth-btn roblox" onclick="alert('Roblox OAuth wird vorbereitet...')">
-                            <i class="fas fa-gamepad"></i>
-                            Mit Roblox anmelden
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="features-container">
+                <div class="section-title">
+                    <h2>Warum RobloxAuth?</h2>
+                    <p>Die professionellste Lösung für deine Roblox-Discord Community</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>OAuth2 + OTP Sicherheit</h3>
+                        <p>Doppelte Absicherung durch Discord/Roblox OAuth2 und E-Mail OTP-Codes. Keine Passwort-Weitergabe, maximale Sicherheit.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h3>Blitzschnell</h3>
+                        <p>Verifiziere dich in unter 15 Sekunden. Automatisierte Rollenvergabe sofort nach erfolgreicher Verifizierung.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-cog"></i></div>
+                        <h3>Volle Kontrolle</h3>
+                        <p>Passe Verifizierungs-Einstellungen, Rollen, Berechtigungen und Nachrichten nach deinen Wünschen an.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Analytics Dashboard</h3>
+                        <p>Behalte den Überblick über Verifizierungen, Member-Wachstum und Server-Aktivitäten in Echtzeit.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Mobile Ready</h3>
+                        <p>Verifiziere dich problemlos von jedem Gerät - Desktop, Tablet oder Smartphone. Responsive Design.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                        <h3>24/7 Support</h3>
+                        <p>Unser Support-Team ist rund um die Uhr für dich da. Durchschnittliche Antwortzeit: unter 5 Minuten.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works" id="how-it-works">
+            <div class="features-container">
+                <div class="section-title">
+                    <h2>So funktioniert's</h2>
+                    <p>In 4 einfachen Schritten zum vollen Zugriff</p>
+                </div>
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Registrieren oder Login</h3>
+                            <p>Wähle Discord, Roblox oder E-Mail. Bei E-Mail-Registrierung erhältst du sofort einen OTP-Code zur Bestätigung.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>OTP-Code eingeben</h3>
+                            <p>Gib den 6-stelligen Code aus deiner E-Mail ein. Dieser ist 10 Minuten gültig und kann nur einmal verwendet werden.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Roblox Account verknüpfen</h3>
+                            <p>Im Dashboard klickst du auf "Roblox verbinden" und autorisierst die Verbindung über die offizielle Roblox OAuth-API.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Fertig verifiziert</h3>
+                            <p>Erhalte automatisch deine verifizierte Rolle im Discord Server. Zugriff auf exklusive Channels ist jetzt freigeschaltet!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="cta-content">
+                <h2>Bereit loszulegen?</h2>
+                <p>Schließe dich tausenden von Servern an und sichere deine Community mit professioneller Roblox-Verifizierung.</p>
+                <button class="btn btn-discord" style="font-size: 18px; padding: 18px 45px;" onclick="switchTab('register')">
+                    <i class="fab fa-discord"></i> Kostenlos starten
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== VIEW: DASHBOARD ===== -->
+    <div id="view-dashboard" class="view">
+        <section class="dashboard">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="dashAvatar">U</div>
+                    <div>
+                        <div style="font-weight: 600;" id="dashUsername">User</div>
+                        <div style="font-size: 13px; color: var(--text-gray);" id="dashEmail">user@email.de</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Roblox Connection Card -->
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-gamepad"></i> Roblox Account</h3>
+                    <div class="account-status">
+                        <div class="status-dot" id="robloxStatusDot"></div>
+                        <span class="status-text" id="robloxStatusText">Nicht verbunden</span>
+                    </div>
+                    
+                    <div id="robloxNotConnected" class="roblox-connect">
+                        <div class="roblox-icon"><i class="fas fa-gamepad"></i></div>
+                        <h4>Verbinde deinen Roblox Account</h4>
+                        <p>Um vollen Zugriff auf alle Features zu erhalten, verknüpfe bitte deinen Roblox Account. Dies ermöglicht:</p>
+                        <ul class="permission-list">
+                            <li><i class="fas fa-check"></i> Automatische Rollenvergabe in Discord</li>
+                            <li><i class="fas fa-check"></i> Zugriff auf exklusive Roblox-Inhalte</li>
+                            <li><i class="fas fa-check"></i> Synchronisierung von Inventar & Stats</li>
+                            <li><i class="fas fa-check"></i> Teilnahme an Roblox-Events</li>
+                        </ul>
+                        <button class="btn btn-roblox" onclick="startRobloxOAuth()" style="width: 100%; padding: 14px; justify-content: center;">
+                            <i class="fas fa-link"></i> Roblox Account verbinden
                         </button>
                     </div>
                     
-                    <div class="divider">
-                        <span>oder mit E-Mail</span>
-                    </div>
-
-                    <form onsubmit="handleLogin(event)">
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
-                            <input type="email" placeholder="deine@email.de" required>
+                    <div id="robloxConnected" class="hidden text-center">
+                        <div style="font-size: 48px; margin-bottom: 15px; color: var(--success-green);">
+                            <i class="fas fa-check-circle"></i>
                         </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Passwort</label>
-                            <input type="password" placeholder="••••••••" required>
+                        <h4 style="margin-bottom: 10px; color: var(--success-green);">Verbunden!</h4>
+                        <p style="color: var(--text-gray); margin-bottom: 20px;">
+                            Dein Roblox Account <strong id="connectedRobloxName">@User</strong> ist erfolgreich verknüpft.
+                        </p>
+                        <div class="dashboard-stats">
+                            <div class="stat-item">
+                                <div class="value" id="statGames">12</div>
+                                <div class="label">Spiele</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="value" id="statItems">248</div>
+                                <div class="label">Items</div>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
-                            <i class="fas fa-sign-in-alt"></i> Anmelden
+                        <button class="btn btn-secondary" style="margin-top: 20px;" onclick="disconnectRoblox()">
+                            <i class="fas fa-unlink"></i> Trennen
                         </button>
-                    </form>
+                    </div>
                 </div>
 
-                <!-- Register Form -->
-                <div id="registerForm" class="form-section">
-                    <form onsubmit="handleRegister(event)">
-                        <div class="form-group">
-                            <label><i class="fas fa-user"></i> Roblox Username</label>
-                            <input type="text" placeholder="DeinRobloxName" required>
+                <!-- Discord Connection Card -->
+                <div class="dashboard-card">
+                    <h3><i class="fab fa-discord"></i> Discord Account</h3>
+                    <div class="account-status">
+                        <div class="status-dot connected"></div>
+                        <span class="status-text connected">Verbunden</span>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #5865F2; display: flex; align-items: center; justify-content: center; font-weight: 700;">D</div>
+                            <div>
+                                <div style="font-weight: 600;" id="discordUsername">DiscordUser#1234</div>
+                                <div style="font-size: 13px; color: var(--text-gray);">ID: 1507855664410529792</div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> E-Mail Adresse</label>
-                            <input type="email" placeholder="deine@email.de" required>
+                    </div>
+                    <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 20px;">
+                        Dein Discord Account ist verifiziert. Du hast Zugriff auf alle Community-Features.
+                    </p>
+                    <button class="btn btn-secondary" style="width: 100%;" onclick="refreshDiscord()">
+                        <i class="fas fa-sync"></i> Berechtigungen aktualisieren
+                    </button>
+                </div>
+
+                <!-- Security Card -->
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-lock"></i> Sicherheit</h3>
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
+                            <span>E-Mail Verifizierung</span>
+                            <span style="color: var(--success-green); font-weight: 600;"><i class="fas fa-check"></i> Aktiv</span>
                         </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Passwort</label>
-                            <input type="password" placeholder="Mindestens 8 Zeichen" required>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
+                            <span>2-Faktor-Auth</span>
+                            <span style="color: var(--text-gray);">Optional</span>
                         </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="terms" required>
-                            <label for="terms">Ich akzeptiere die <a href="#">AGB</a> und <a href="#">Datenschutzerklärung</a></label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                            <span>Letzter Login</span>
+                            <span style="color: var(--text-gray); font-size: 13px;" id="lastLogin">Heute, 14:32</span>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;">
-                            <i class="fas fa-user-plus"></i> Konto erstellen
+                    </div>
+                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">
+                        <i class="fas fa-key"></i> Passwort ändern
+                    </button>
+                    <button class="btn btn-secondary" style="width: 100%;">
+                        <i class="fas fa-shield-alt"></i> 2FA einrichten
+                    </button>
+                </div>
+
+                <!-- Quick Actions Card -->
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-bolt"></i> Schnellaktionen</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button class="btn btn-primary" style="padding: 12px; font-size: 14px;" onclick="showView('home')">
+                            <i class="fas fa-home"></i><br>Startseite
                         </button>
-                    </form>
-                </div>
-
-                <div class="form-footer">
-                    <p id="formFooterText">Noch kein Konto? <a href="#" onclick="switchTab('register')">Jetzt registrieren</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="features-container">
-            <div class="section-title">
-                <h2>Warum RobloxAuth?</h2>
-                <p>Die professionellste Lösung für deine Roblox-Discord Community</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>OAuth2 Sicherheit</h3>
-                    <p>Nutze die offizielle Discord & Roblox OAuth2 API. Keine Passwort-Weitergabe, maximale Sicherheit für deine Daten.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Blitzschnell</h3>
-                    <p>Verifiziere dich in unter 10 Sekunden. Automatisierte Rollenvergabe sofort nach der Verifizierung.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                    <h3>Volle Kontrolle</h3>
-                    <p>Passe Verifizierungs-Einstellungen, Rollen, Berechtigungen und Nachrichten nach deinen Wünschen an.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Analytics Dashboard</h3>
-                    <p>Behalte den Überblick über Verifizierungen, Member-Wachstum und Server-Aktivitäten in Echtzeit.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Mobile Ready</h3>
-                    <p>Verifiziere dich problemlos von jedem Gerät - Desktop, Tablet oder Smartphone. Responsive Design.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>24/7 Support</h3>
-                    <p>Unser Support-Team ist rund um die Uhr für dich da. Durchschnittliche Antwortzeit: unter 5 Minuten.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="features-container">
-            <div class="section-title">
-                <h2>So funktioniert's</h2>
-                <p>In 3 einfachen Schritten verifiziert</p>
-            </div>
-            <div class="steps-container">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>Mit Discord verbinden</h3>
-                        <p>Klicke auf "Mit Discord anmelden" und autorisiere RobloxAuth. Wir fragen nur die notwendigsten Berechtigungen ab (Nutzername & E-Mail).</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>Roblox Account verknüpfen</h3>
-                        <p>Gib deinen Roblox-Username ein oder verbinde dich direkt über Roblox OAuth. Wir überprüfen automatisch die Account-Informationen.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>Fertig verifiziert</h3>
-                        <p>Erhalte automatisch deine verifizierte Rolle im Discord Server. Zugriff auf exklusive Channels und Features ist jetzt freigeschaltet!</p>
+                        <button class="btn btn-secondary" style="padding: 12px; font-size: 14px;">
+                            <i class="fas fa-cog"></i><br>Einstellungen
+                        </button>
+                        <button class="btn btn-secondary" style="padding: 12px; font-size: 14px;">
+                            <i class="fas fa-headset"></i><br>Support
+                        </button>
+                        <button class="btn btn-secondary" style="padding: 12px; font-size: 14px;">
+                            <i class="fas fa-download"></i><br>Logs
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="cta-content">
-            <h2>Bereit loszulegen?</h2>
-            <p>Schließe dich tausenden von Servern an und sichere deine Community mit professioneller Roblox-Verifizierung.</p>
-            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fchat-gpt-llfo.vercel.app%2F&scope=identify+email" class="btn btn-discord" style="font-size: 18px; padding: 18px 45px;" target="_blank">
-                <i class="fab fa-discord"></i> Kostenlos starten
-            </a>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -1136,12 +997,36 @@
     </footer>
 
     <script>
-        // Tab Switching
+        // ===== STATE MANAGEMENT =====
+        let currentUser = null;
+        let otpCode = null;
+        let otpTimer = null;
+        const OTP_VALIDITY = 600; // 10 minutes in seconds
+
+        // ===== VIEW NAVIGATION =====
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${viewName}`).classList.add('active');
+            
+            // Update nav
+            const isAuthed = currentUser !== null;
+            document.getElementById('navLinks').classList.toggle('hidden', isAuthed);
+            document.getElementById('navLinksAuth').classList.toggle('hidden', !isAuthed);
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // ===== TAB SWITCHING =====
         function switchTab(tab) {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
+            const otpForm = document.getElementById('otpForm');
             const tabs = document.querySelectorAll('.tab');
             const footerText = document.getElementById('formFooterText');
+
+            // Hide OTP if switching tabs
+            otpForm.classList.remove('active');
 
             if (tab === 'login') {
                 loginForm.classList.add('active');
@@ -1158,76 +1043,367 @@
             }
         }
 
-        // Handle Login
+        // ===== OTP INPUT HANDLING =====
+        document.querySelectorAll('.otp-digit').forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < 5) {
+                    document.querySelectorAll('.otp-digit')[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    document.querySelectorAll('.otp-digit')[index - 1].focus();
+                }
+            });
+        });
+
+        // ===== REGISTRATION FLOW =====
+        function handleRegisterStart(e) {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const roblox = document.getElementById('regRoblox').value;
+            const password = document.getElementById('regPassword').value;
+            
+            // Validate
+            if (password.length < 8) {
+                alert('Das Passwort muss mindestens 8 Zeichen lang sein.');
+                return;
+            }
+            
+            // Show loading
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="loading"></span> Wird gesendet...';
+            btn.disabled = true;
+            
+            // Simulate API call to send OTP
+            setTimeout(() => {
+                // Generate demo OTP (in production: get from backend)
+                otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+                console.log('🔐 DEMO OTP Code:', otpCode); // For testing only
+                
+                // Show OTP form
+                document.getElementById('registerForm').classList.remove('active');
+                document.getElementById('otpForm').classList.add('active');
+                document.getElementById('otpEmailDisplay').textContent = email;
+                
+                // Reset OTP inputs
+                document.querySelectorAll('.otp-digit').forEach(i => i.value = '');
+                document.querySelectorAll('.otp-digit')[0].focus();
+                
+                // Start resend timer
+                startResendTimer();
+                
+                // Reset button
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                
+                // Store temp user data (in production: session/backend)
+                currentUser = { email, roblox, password };
+                
+            }, 1500);
+        }
+
+        // ===== OTP VERIFICATION =====
+        function verifyOTP() {
+            const code = Array.from(document.querySelectorAll('.otp-digit')).map(i => i.value).join('');
+            
+            if (code.length !== 6) {
+                alert('Bitte gib den vollständigen 6-stelligen Code ein.');
+                return;
+            }
+            
+            // Demo validation (in production: verify with backend)
+            if (code === otpCode) {
+                // Success!
+                document.getElementById('otpForm').innerHTML = `
+                    <div class="success-checkmark"><i class="fas fa-check"></i></div>
+                    <h2 style="text-align: center; color: var(--success-green); margin-bottom: 20px;">Erfolgreich verifiziert!</h2>
+                    <p style="text-align: center; color: var(--text-gray); margin-bottom: 30px;">Dein Konto wurde erstellt. Du wirst zum Dashboard weitergeleitet...</p>
+                `;
+                
+                // Save user and redirect to dashboard
+                setTimeout(() => {
+                    currentUser.verified = true;
+                    currentUser.joined = new Date().toLocaleDateString('de-DE');
+                    updateDashboard(currentUser);
+                    showView('dashboard');
+                    
+                    // Reset forms for next time
+                    setTimeout(() => location.reload(), 3000);
+                }, 2000);
+                
+            } else {
+                // Wrong code
+                alert('❌ Falscher Code. Bitte überprüfe deine E-Mail und versuche es erneut.');
+                document.querySelectorAll('.otp-digit').forEach(i => {
+                    i.value = '';
+                    i.style.borderColor = 'var(--secondary-red)';
+                    setTimeout(() => i.style.borderColor = '', 500);
+                });
+                document.querySelectorAll('.otp-digit')[0].focus();
+            }
+        }
+
+        // ===== RESEND OTP =====
+        function startResendTimer() {
+            let timeLeft = 60;
+            const resendEl = document.getElementById('otpResend');
+            const link = resendEl.querySelector('a');
+            
+            resendEl.classList.add('disabled');
+            link.textContent = `in ${timeLeft}s`;
+            
+            clearInterval(otpTimer);
+            otpTimer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(otpTimer);
+                    resendEl.classList.remove('disabled');
+                    link.textContent = 'Erneut senden';
+                } else {
+                    link.textContent = `in ${timeLeft}s`;
+                }
+            }, 1000);
+        }
+
+        function resendOTP(e) {
+            e.preventDefault();
+            if (document.getElementById('otpResend').classList.contains('disabled')) return;
+            
+            const btn = document.querySelector('#otpForm .btn-primary');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<span class="loading"></span> Wird gesendet...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                // Generate new OTP
+                otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+                console.log('🔐 Neuer DEMO OTP Code:', otpCode);
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Gesendet!';
+                btn.style.background = 'linear-gradient(135deg, var(--success-green), #00E676)';
+                
+                startResendTimer();
+                
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.disabled = false;
+                    btn.style.background = '';
+                }, 2000);
+            }, 1000);
+        }
+
+        // ===== LOGIN =====
         function handleLogin(e) {
             e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
             const btn = e.target.querySelector('button[type="submit"]');
             const originalContent = btn.innerHTML;
-            
             btn.innerHTML = '<span class="loading"></span> Wird angemeldet...';
             btn.disabled = true;
-
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-check"></i> Erfolgreich!';
-                btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
-                    btn.style.background = '';
-                    e.target.reset();
-                    alert('Login erfolgreich! (Demo)');
-                }, 1500);
-            }, 1500);
-        }
-
-        // Handle Register
-        function handleRegister(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalContent = btn.innerHTML;
             
-            btn.innerHTML = '<span class="loading"></span> Konto wird erstellt...';
-            btn.disabled = true;
-
+            // Simulate API login
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-check"></i> Konto erstellt!';
-                btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
+                // Demo: accept any credentials for testing
+                currentUser = {
+                    email: email,
+                    roblox: 'DemoUser',
+                    verified: true,
+                    robloxConnected: false,
+                    discordConnected: true,
+                    joined: '01.01.2026'
+                };
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Erfolgreich!';
+                btn.style.background = 'linear-gradient(135deg, var(--success-green), #00E676)';
                 
                 setTimeout(() => {
+                    updateDashboard(currentUser);
+                    showView('dashboard');
+                    e.target.reset();
                     btn.innerHTML = originalContent;
                     btn.disabled = false;
                     btn.style.background = '';
-                    e.target.reset();
-                    alert('Registrierung erfolgreich! (Demo)');
-                }, 1500);
+                }, 1000);
             }, 1500);
         }
 
-        // Smooth Scroll
+        // ===== DASHBOARD FUNCTIONS =====
+        function updateDashboard(user) {
+            // Update user info in nav
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+            
+            // Update dashboard
+            document.getElementById('dashEmail').textContent = user.email;
+            document.getElementById('dashUsername').textContent = user.roblox || user.email.split('@')[0];
+            document.getElementById('dashAvatar').textContent = (user.roblox || user.email).charAt(0).toUpperCase();
+            
+            // Update Roblox connection status
+            const statusDot = document.getElementById('robloxStatusDot');
+            const statusText = document.getElementById('robloxStatusText');
+            const notConnected = document.getElementById('robloxNotConnected');
+            const connected = document.getElementById('robloxConnected');
+            
+            if (user.robloxConnected) {
+                statusDot.classList.add('connected');
+                statusText.textContent = 'Verbunden';
+                statusText.classList.add('connected');
+                notConnected.classList.add('hidden');
+                connected.classList.remove('hidden');
+                document.getElementById('connectedRobloxName').textContent = '@' + user.roblox;
+            } else {
+                statusDot.classList.remove('connected');
+                statusText.textContent = 'Nicht verbunden';
+                statusText.classList.remove('connected');
+                notConnected.classList.remove('hidden');
+                connected.classList.add('hidden');
+            }
+            
+            // Update last login
+            document.getElementById('lastLogin').textContent = 'Heute, ' + new Date().toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // ===== ROBLOX OAUTH =====
+        function startRobloxOAuth() {
+            // In production: redirect to Roblox OAuth
+            // https://apis.roblox.com/oauth/v1/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=YOUR_REDIRECT_URI&scope=openid+profile
+            
+            alert('🔗 Roblox OAuth wird vorbereitet...\n\nIn der Produktion würdest du jetzt zur Roblox-Autorisierungsseite weitergeleitet.');
+            
+            // Demo: simulate successful connection after delay
+            setTimeout(() => {
+                if (currentUser) {
+                    currentUser.robloxConnected = true;
+                    currentUser.roblox = currentUser.roblox || 'ConnectedUser';
+                    updateDashboard(currentUser);
+                    
+                    // Show success message if on dashboard
+                    if (document.getElementById('view-dashboard').classList.contains('active')) {
+                        alert('✅ Roblox Account erfolgreich verbunden!');
+                    }
+                }
+            }, 2000);
+        }
+
+        function disconnectRoblox() {
+            if (confirm('Möchtest du die Verbindung zu deinem Roblox Account wirklich trennen?')) {
+                if (currentUser) {
+                    currentUser.robloxConnected = false;
+                    updateDashboard(currentUser);
+                    alert('🔌 Verbindung getrennt.');
+                }
+            }
+        }
+
+        function refreshDiscord() {
+            alert('🔄 Discord-Berechtigungen werden aktualisiert...');
+            setTimeout(() => alert('✅ Aktualisierung erfolgreich!'), 1000);
+        }
+
+        // ===== LOGOUT =====
+        function logout() {
+            if (confirm('Möchtest du dich wirklich abmelden?')) {
+                currentUser = null;
+                otpCode = null;
+                clearInterval(otpTimer);
+                
+                // Reset forms
+                document.getElementById('loginForm').reset();
+                document.getElementById('registerForm').reset();
+                document.getElementById('otpForm').innerHTML = `
+                    <div class="otp-section">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🔐</div>
+                        <h3 style="margin-bottom: 10px; color: var(--primary-orange);">Code eingeben</h3>
+                        <p>Wir haben einen 6-stelligen Code an <strong id="otpEmailDisplay">deine@email.de</strong> gesendet.</p>
+                        <div class="otp-inputs">
+                            <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                            <input type="text" maxlength="1" class="otp-digit" inputmode="numeric">
+                        </div>
+                        <button type="button" class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;" onclick="verifyOTP()">
+                            <i class="fas fa-check"></i> Code bestätigen
+                        </button>
+                        <p class="otp-resend" id="otpResend">
+                            Kein Code erhalten? <a href="#" onclick="resendOTP(event)">Erneut senden</a>
+                        </p>
+                    </div>
+                `;
+                // Re-attach OTP listeners
+                document.querySelectorAll('.otp-digit').forEach((input, index) => {
+                    input.oninput = null;
+                    input.onkeydown = null;
+                    input.addEventListener('input', (e) => {
+                        if (e.target.value.length === 1 && index < 5) {
+                            document.querySelectorAll('.otp-digit')[index + 1].focus();
+                        }
+                    });
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                            document.querySelectorAll('.otp-digit')[index - 1].focus();
+                        }
+                    });
+                });
+                
+                showView('home');
+                switchTab('login');
+            }
+        }
+
+        // ===== OAUTH CALLBACK HANDLER =====
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+            
+            if (error) {
+                alert('❌ Autorisierung fehlgeschlagen: ' + error);
+                return;
+            }
+            
+            if (code) {
+                // Handle OAuth callback (Discord or Roblox)
+                // In production: exchange code for token via backend
+                console.log('OAuth code received:', code);
+                
+                // Demo success
+                const card = document.querySelector('.verification-card');
+                if (card && !currentUser) {
+                    card.innerHTML = `
+                        <div class="success-checkmark"><i class="fas fa-check"></i></div>
+                        <h2 style="text-align: center; color: var(--success-green); margin-bottom: 20px;">Erfolgreich verbunden!</h2>
+                        <p style="text-align: center; color: var(--text-gray); margin-bottom: 30px;">Dein Account wurde erfolgreich verknüpft.</p>
+                        <button class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;" onclick="showView('dashboard')">
+                            <i class="fas fa-home"></i> Zum Dashboard
+                        </button>
+                    `;
+                }
+            }
+        });
+
+        // ===== SMOOTH SCROLL =====
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
-                if (href !== '#') {
+                if (href !== '#' && !href.startsWith('http')) {
                     e.preventDefault();
                     const target = document.querySelector(href);
                     if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 }
             });
         });
 
-        // Scroll Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
+        // ===== SCROLL ANIMATIONS =====
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
@@ -1236,7 +1412,6 @@
             });
         }, observerOptions);
 
-        // Observe all feature cards and steps
         document.querySelectorAll('.feature-card, .step').forEach((el, index) => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
@@ -1244,7 +1419,7 @@
             observer.observe(el);
         });
 
-        // Navbar scroll effect
+        // ===== NAVBAR SCROLL EFFECT =====
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
             if (window.scrollY > 50) {
@@ -1256,26 +1431,21 @@
             }
         });
 
-        // Check for OAuth callback
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            
-            if (code) {
-                // Show success message
-                const card = document.querySelector('.verification-card');
-                card.innerHTML = `
-                    <div class="success-checkmark">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <h2 style="text-align: center; color: var(--primary-orange); margin-bottom: 20px;">Erfolgreich verbunden!</h2>
-                    <p style="text-align: center; color: var(--text-gray); margin-bottom: 30px;">Dein Discord-Account wurde erfolgreich mit RobloxAuth verknüpft.</p>
-                    <button class="btn btn-primary" style="width: 100%; padding: 16px; justify-content: center;" onclick="window.location.href='/'">
-                        <i class="fas fa-home"></i> Zurück zur Startseite
-                    </button>
-                `;
-            }
-        });
+        // ===== INIT =====
+        // Check for saved session (demo)
+        const savedUser = localStorage.getItem('robloxauth_user');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            updateDashboard(currentUser);
+            showView('dashboard');
+        }
+
+        // Save user on changes (demo)
+        const originalUpdateDashboard = updateDashboard;
+        updateDashboard = function(user) {
+            originalUpdateDashboard(user);
+            localStorage.setItem('robloxauth_user', JSON.stringify(user));
+        };
     </script>
 </body>
 </html>
