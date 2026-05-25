@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xerion X | Roblox Verification & Shop</title>
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --red: #ff1f1f; 
+            --red-glow: rgba(255, 31, 31, 0.4);
+            --bg: #050505; 
+            --card: #0a0a0a; 
+            --text-gray: #888; 
+            --border: #222;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: white; 
+            /* Subtiler roter Schein von oben */
+            background-image: radial-gradient(circle at 50% -20%, #2a0505 0%, transparent 60%);
+            min-height: 100vh; 
+            overflow-x: hidden;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+        /* --- Navigation --- */
+        nav { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 20px 5%; 
+            background: rgba(5, 5, 5, 0.85); 
+            backdrop-filter: blur(12px);
+            position: fixed; width: 100%; top: 0; z-index: 1000; 
+            border-bottom: 1px solid var(--border); 
+            transition: 0.3s;
+        }
+        
+        .brand { 
+            font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px; 
+            font-family: 'Rajdhani', sans-serif; text-transform: uppercase; cursor: pointer; 
+            letter-spacing: 1px;
+        }
+        
+        /* Das rotierende X Logo */
+        .logo-x { 
+            width: 32px; height: 32px; background: var(--red); 
+            clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%); 
+            box-shadow: 0 0 15px var(--red); 
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px var(--red); }
+            50% { box-shadow: 0 0 25px var(--red), 0 0 10px white; }
+            100% { box-shadow: 0 0 10px var(--red); }
+        }
+        
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-item { 
+            color: var(--text-gray); text-decoration: none; font-weight: 500; 
+            transition: 0.3s; position: relative; cursor: pointer;
+        }
+        .nav-item:hover, .nav-item.active { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .nav-item::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px;
+            background: var(--red); transition: 0.3s;
+        }
+        .nav-item:hover::after { width: 100%; }
+
+        /* Buttons */
+        .btn-auth { 
+            background: var(--red); color: white; padding: 10px 30px; border: none; 
+            font-weight: 700; font-family: 'Rajdhani', sans-serif; text-transform: uppercase;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block;
+            letter-spacing: 1px;
+        }
+        .btn-auth:hover { 
+            background: white; color: var(--red); 
+            box-shadow: 0 0 25px var(--red-glow); transform: translateY(-2px);
+        }
+        .btn-auth.secondary { background: #222; }
+        .btn-auth.secondary:hover { background: #333; color: white; box-shadow: none; }
+
+        /* --- Sections Layout --- */
+        section { 
+            padding: 140px 5% 60px; min-height: 100vh; display: none; 
+            animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
+        section.active { display: block; }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        h1 { 
+            font-family: 'Rajdhani', sans-serif; font-size: 64px; line-height: 1.1;
+            text-transform: uppercase; margin-bottom: 20px; font-weight: 700;
+        }
+        h1 span { color: var(--red); text-shadow: 0 0 30px var(--red-glow); }
+        
+        p.subtitle { color: var(--text-gray); font-size: 18px; max-width: 600px; line-height: 1.6; margin-bottom: 40px; }
+
+        /* Cards */
+        .card { 
+            background: var(--card); padding: 40px; border: 1px solid var(--border); 
+            border-top: 2px solid var(--red); position: relative; overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 31, 31, 0.03), transparent);
+            pointer-events: none;
+        }
+
+        /* Inputs */
+        .input-group { position: relative; margin-bottom: 25px; }
+        .input-field { 
+            width: 100%; padding: 18px; background: #000; border: 1px solid var(--border); 
+            color: white; font-size: 16px; outline: none; transition: 0.3s; 
+            font-family: 'Inter', sans-serif;
+        }
+        .input-field:focus { border-color: var(--red); box-shadow: 0 0 15px rgba(255, 31, 31, 0.15); }
+        .input-label {
+            position: absolute; left: 18px; top: 18px; color: #555; pointer-events: none; transition: 0.3s;
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .input-field:focus + .input-label,
+        .input-field:not(:placeholder-shown) + .input-label {
+            top: -10px; left: 10px; background: var(--card); padding: 0 5px; color: var(--red); font-size: 12px;
+        }
+
+        /* Status Messages */
+        .status-msg { margin-top: 20px; font-weight: 600; min-height: 24px; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        .success { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
+        .error { color: var(--red); text-shadow: 0 0 10px rgba(255, 31, 31, 0.4); }
+        .loading { color: #ffaa00; }
+
+        /* Shop Grid */
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 50px; }
+        .product { 
+            background: var(--card); padding: 30px; border: 1px solid var(--border); 
+            transition: 0.4s; text-align: center; position: relative;
+        }
+        .product:hover { border-color: var(--red); transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .product i { font-size: 50px; color: #333; margin-bottom: 20px; transition: 0.3s; }
+        .product:hover i { color: var(--red); text-shadow: 0 0 20px var(--red); }
+        .price { color: white; font-weight: 700; font-size: 24px; margin: 15px 0; font-family: 'Rajdhani'; }
+        .price span { color: var(--red); font-size: 14px; vertical-align: super; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 42px; }
+            nav { padding: 15px 5%; }
+            .nav-links { gap: 15px; }
+            .btn-auth { padding: 8px 20px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="brand" onclick="showSection('home')">
+            <div class="logo-x"></div>
+            XERION <span style="color:white">X</span>
+        </div>
+        <div class="nav-links">
+            <a class="nav-item" onclick="showSection('home')">Home</a>
+            <a class="nav-item" onclick="showSection('shop')">Shop</a>
+            <a class="nav-item" onclick="showSection('verify')">Verify</a>
+            
+            <!-- Auth Buttons -->
+            <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fxerionx.kiblox.at%2FRoblox%2Findex.html&scope=identify" class="btn-auth" id="loginBtn">
+                <i class="fab fa-discord"></i> Login
+            </a>
+            <button class="btn-auth secondary" id="logoutBtn" style="display:none;" onclick="logout()">
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- HOME SECTION -->
+    <section id="home" class="active">
+        <div class="container" style="text-align: center; padding-top: 50px;">
+            <h1>Welcome to <br><span>Xerion X</span></h1>
+            <p class="subtitle" style="margin: 0 auto 50px;">
+                Der ultimative Marktplatz für hochwertige Roblox Assets. 
+                Sicher, schnell und exklusiv für verifizierte Mitglieder.
+            </p>
+            
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-auth" onclick="showSection('verify')" style="font-size: 18px; padding: 15px 40px;">
+                    Jetzt Verifizieren
+                </button>
+                <button class="btn-auth secondary" onclick="showSection('shop')" style="font-size: 18px; padding: 15px 40px;">
+                    Zum Shop
+                </button>
+            </div>
+
+            <!-- Features -->
+            <div class="shop-grid" style="margin-top: 100px; text-align: left;">
+                <div class="product" style="border:none; background: transparent; padding: 0;">
+                    <i class="fas fa-bolt" style="color: var(--red); font-size: 30px; margin-bottom: 15px;"></i>
+                    <h3 style="font-family: 'Rajdhani'; font-size: 22px; margin-bottom: 10px;">Instant Delivery</h3>
+                    <p style="color: #666; font-size: 14px;">Automatisierte Systeme sorgen für sofortige Lieferung nach Kauf.</p>
+                </div>
+                <div class="product" style="border:none; background: transparent; padding: 0;">
+                    <i class="fas fa-shield-alt" style="color: var(--red); font-size: 30px; margin-bottom: 15px;"></i>
+                    <h3 style="font-family: 'Rajdhani'; font-size: 22px; margin-bottom: 10px;">Secure Payment</h3>
+                    <p style="color: #666; font-size: 14px;">Deine Daten sind sicher. Wir nutzen keine externen Payment-Gateways.</p>
+                </div>
+                <div class="product" style="border:none; background: transparent; padding: 0;">
+                    <i class="fas fa-users" style="color: var(--red); font-size: 30px; margin-bottom: 15px;"></i>
+                    <h3 style="font-family: 'Rajdhani'; font-size: 22px; margin-bottom: 10px;">Community</h3>
+                    <p style="color: #666; font-size: 14px;">Tritt unserem Discord bei und werde Teil des Netzwerks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOP SECTION -->
+    <section id="shop">
+        <div class="container">
+            <h1>Market<span style="color:var(--red)">place</span></h1>
+            <p class="subtitle">Wähle dein Produkt. Nach dem Kauf erhältst du den Script-Code direkt im Discord.</p>
+            
+            <div class="shop-grid">
+                <!-- Product 1 -->
+                <div class="product">
+                    <i class="fas fa-terminal"></i>
+                    <h3 style="font-family:'Rajdhani'; font-size: 24px;">Admin Command System</h3>
+                    <p style="color:#666; font-size: 13px; margin-bottom: 15px;">Vollständiges Admin-Panel mit Ban, Kick, Fly und mehr.</p>
+                    <div class="price"><span>R$</span> 450</div>
+                    <button class="btn-auth" style="width:100%" onclick="checkAuthAndBuy('Admin System')">Kaufen</button>
+                </div>
+                <!-- Product 2 -->
+                <div class="product">
+                    <i class="fas fa-shield-virus"></i>
+                    <h3 style="font-family:'Rajdhani'; font-size: 24px;">Advanced Anti-Cheat</h3>
+                    <p style="color:#666; font-size: 13px; margin-bottom: 15px;">Schützt vor Speedhack, Flyhack und Injectors.</p>
+                    <div class="price"><span>R$</span> 1200</div>
+                    <button class="btn-auth" style="width:100%" onclick="checkAuthAndBuy('Anti-Cheat')">Kaufen</button>
+                </div>
+                <!-- Product 3 -->
+                <div class="product">
+                    <i class="fas fa-crown"></i>
+                    <h3 style="font-family:'Rajdhani'; font-size: 24px;">VIP Membership</h3>
+                    <p style="color:#666; font-size: 13px; margin-bottom: 15px;">Zugang zu privaten Channels und Rabatten.</p>
+                    <div class="price"><span>R$</span> 250</div>
+                    <button class="btn-auth" style="width:100%" onclick="checkAuthAndBuy('VIP Pass')">Kaufen</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VERIFY SECTION -->
+    <section id="verify">
+        <div class="container" style="max-width: 600px;">
+            <h1>Roblox <span style="color:var(--red)">Verify</span></h1>
+            
+            <!-- Guest View (Not Logged In) -->
+            <div id="guestView" class="card" style="text-align: center;">
+                <i class="fab fa-discord" style="font-size: 60px; color: #555; margin-bottom: 20px;"></i>
+                <h3 style="font-family: 'Rajdhani'; font-size: 24px; margin-bottom: 15px;">Login Required</h3>
+                <p style="color:#aaa; margin-bottom: 30px;">
+                    Um Missbrauch zu verhindern, musst du dich mit deinem Discord-Account anmelden, um die Verifizierung zu starten.
+                </p>
+                <a href="https://discord.com/oauth2/authorize?client_id=1507855664410529792&response_type=code&redirect_uri=https%3A%2F%2Fxerionx.kiblox.at%2FRoblox%2Findex.html&scope=identify" class="btn-auth">
+                    Mit Discord verbinden
+                </a>
+            </div>
+
+            <!-- User View (Logged In) -->
+            <div id="userView" class="card" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 style="font-family:'Rajdhani'; font-size: 22px;">Verifizierungs-Anfrage</h3>
+                    <i class="fas fa-check-circle" style="color: #00ff88;"></i>
+                </div>
+                
+                <p style="color:#ccc; margin-bottom: 25px; font-size: 14px;">
+                    Gib exakt deinen Roblox-Namen ein. Ein Admin wird deine Anfrage prüfen und dir im Discord Server die "Verified" Rolle zuweisen.
+                </p>
+
+                <div class="input-group">
+                    <input type="text" id="rbxName" class="input-field" placeholder=" " autocomplete="off">
+                    <label class="input-label">Roblox Username</label>
+                </div>
+
+                <button class="btn-auth" style="width:100%" onclick="sendVerifyRequest()" id="verifyBtn">
+                    Anfrage Absenden
+                </button>
+                
+                <div id="statusMsg" class="status-msg"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- KONFIGURATION ---
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1508174956486463552/9C28PlKyzlYNzktNAlPBHwdiLLz4kM4NQJJZP9EQw1U1H8ct89W4HqB12C10Xr9e4bpq";
+
+        // --- INITIALISIERUNG ---
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+            handleRedirect();
+        });
+
+        // --- NAVIGATION ---
+        function showSection(id) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            // Show target
+            document.getElementById(id).classList.add('active');
+            
+            // Highlight nav item (simple match)
+            const navItems = document.querySelectorAll('.nav-item');
+            if(id === 'home') navItems[0].classList.add('active');
+            if(id === 'shop') navItems[1].classList.add('active');
+            if(id === 'verify') navItems[2].classList.add('active');
+
+            window.scrollTo(0,0);
+        }
+
+        // --- AUTH LOGIC ---
+        function handleRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                // Simulierter Login Erfolg
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loginTime', new Date().getTime());
+                
+                // Clean URL without reload
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // UI Update & Feedback
+                updateUI();
+                showSection('verify'); // Auto-redirect to verify page
+                
+                const statusDiv = document.getElementById('statusMsg');
+                statusDiv.innerHTML = "<span class='success'>✅ Erfolgreich eingeloggt!</span>";
+                setTimeout(() => statusDiv.innerHTML = "", 3000);
+            }
+        }
+
+        function checkLoginStatus() {
+            // Optional: Session Timeout Logic could go here
+            updateUI();
+        }
+
+        function updateUI() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const guestView = document.getElementById('guestView');
+            const userView = document.getElementById('userView');
+
+            if (isLoggedIn) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                guestView.style.display = 'none';
+                userView.style.display = 'block';
+            } else {
+                loginBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+                guestView.style.display = 'block';
+                userView.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            if(confirm("Möchtest du dich wirklich abmelden?")) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('loginTime');
+                location.reload();
+            }
+        }
+
+        function checkAuthAndBuy(itemName) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                alert("Bitte logge dich zuerst ein, um kaufen zu können!");
+                showSection('verify');
+            } else {
+                alert(`Du hast "${itemName}" ausgewählt. Dies ist eine Demo-Funktion. Im echten System würdest du jetzt zur Kasse weitergeleitet.`);
+            }
+        }
+
+        // --- VERIFICATION LOGIC ---
+        async function sendVerifyRequest() {
+            const rbxNameInput = document.getElementById('rbxName');
+            const rbxName = rbxNameInput.value.trim();
+            const statusDiv = document.getElementById('statusMsg');
+            const btn = document.getElementById('verifyBtn');
+
+            if (!rbxName) {
+                statusDiv.innerHTML = "<span class='error'>❌ Bitte gib einen gültigen Roblox-Namen ein.</span>";
+                rbxNameInput.focus();
+                return;
+            }
+
+            // Loading State
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sende...';
+            statusDiv.innerHTML = "<span class='loading'>⏳ Verbindung zu Discord wird aufgebaut...</span>";
+
+            const payload = {
+                username: "Xerion Verify Bot",
+                avatar_url: "https://i.imgur.com/AfFp7pu.png",
+                embeds: [{
+                    title: "🔗 Neue Verifizierungs-Anfrage",
+                    description: "Ein User möchte Zugang zum verified Bereich.",
+                    color: 16711680, // Red
+                    fields: [
+                        { name: "👤 Roblox Name", value: `\`${rbxName}\``, inline: true },
+                        { name: "🕒 Zeitstempel", value: new Date().toLocaleString('de-DE'), inline: true },
+                        { name: "Status", value: "⏳ Pending Review", inline: false }
+                    ],
+                    footer: { text: "Xerion X Security System • ID: " + Math.floor(Math.random() * 9000) + 1000 },
+                    timestamp: new Date()
+                }]
+            };
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok || response.status === 204) {
+                    statusDiv.innerHTML = "<span class='success'>✅ Erfolg! Deine Anfrage wurde an die Admins gesendet. Bitte warte im Discord Server.</span>";
+                    rbxNameInput.value = "";
+                    rbxNameInput.disabled = true;
+                    btn.style.display = 'none';
+                } else {
+                    throw new Error('Webhook Fehler');
+                }
+            } catch (error) {
+                console.error(error);
+                statusDiv.innerHTML = "<span class='error'>❌ Netzwerkfehler. Bitte versuche es später erneut.</span>";
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.innerHTML = 'Anfrage Absenden';
+            }
+        }
+    </script>
+</body>
+</html>
